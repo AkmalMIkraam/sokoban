@@ -6,5 +6,11 @@ public final class Position {
         this.x = x;
         this.y = y;
     }
+
+    public String toString()
+    {
+        return "{" + x + ", " + y + "}";
+    }
+
     public int x, y;
 }

@@ -25,4 +25,13 @@ public final class Map {
     {
         throw new NotImplementedException();
     }
+
+    /**
+     *
+     * @return String representing the map
+     */
+    public String toString()
+    {
+        throw new NotImplementedException();
+    }
 }

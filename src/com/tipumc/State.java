@@ -64,6 +64,15 @@ public class State {
     }
 
     /**
+     *
+     * @return A string to be used when debugging the AI
+     */
+    public String toString()
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
      * We don't necessarily have to store objects like this but it would work as a start.
      */
     private ArrayList<Position> boxes;
