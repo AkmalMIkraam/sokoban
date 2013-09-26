@@ -3,6 +3,7 @@ package com.tipumc;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class State {
 
@@ -11,6 +12,13 @@ public class State {
         this.map = map;
         this.player = player;
         this.boxes = boxes;
+    }
+
+    public State(Map map, Vector<String> board)
+    {
+        this.map = map;
+        //Read in the initial position of the boxes and the player.
+        throw new NotImplementedException();
     }
 
     /**

@@ -20,6 +20,9 @@ public class Main {
             board.add(line);
         } // End while
 
+        Map map = new Map(board);
+        State initialState = new State(map, board);
+
         // Access
         //char = board.get(row).charAt(col);
 
