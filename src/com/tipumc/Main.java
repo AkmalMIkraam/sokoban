@@ -20,11 +20,11 @@ public class Main {
             board.add(line);
         } // End while
 
-        System.out.println(board.get(0));
-        System.out.println(board.get(1));
-        System.out.println(board.get(2));
-        System.out.println(board.size());
-        //Map map = new Map(board);
+
+        System.out.println("Board size "+board.size());
+        Map map = new Map(board);
+        
+        System.out.println(map.toString());
         //State initialState = new State(map, board);
 
         // Access
