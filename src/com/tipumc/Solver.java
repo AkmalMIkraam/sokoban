@@ -13,12 +13,12 @@ public class Solver {
     public static Iterable<Move> solve(State state)
     {
         Position player = state.getPlayer();
-        ArrayList<Position> pathToBox = Search.bfs(state, isBox, player.x, player.y);
-        Position boxPosition = pathToBox.get(pathToBox.size() - 1);
+        Search.Result pathToBox = Search.dfs(state, isBox, player.x, player.y);
+        Position boxPosition = pathToBox.endPosition;
 
-        ArrayList<Position> boxToGoalPath = Search.bfs(state, isGoal, boxPosition.x, boxPosition.y);
+        Search.Result boxToGoalPath = Search.dfs(state, isGoal, boxPosition.x, boxPosition.y);
 
-        pathToBox.addAll(boxToGoalPath);
-        return new MoveIterable(pathToBox);
+        pathToBox.path.addAll(boxToGoalPath.path);
+        return pathToBox.path;
     }
 }
