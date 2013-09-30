@@ -20,9 +20,10 @@ public class Main {
             board.add(line);
         } // End while
 
-        System.out.println(board.elementAt(0).toString());
-        System.out.println(board.elementAt(1).toString());
-        System.out.println(board.elementAt(2).toString());
+        System.out.println(board.get(0));
+        System.out.println(board.get(1));
+        System.out.println(board.get(2));
+        System.out.println(board.size());
         //Map map = new Map(board);
         //State initialState = new State(map, board);
 
