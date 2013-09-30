@@ -6,10 +6,9 @@ import java.util.Vector;
 
 public final class Search {
 
-    public static bfs()
+    public static bfs(GoalTest test, )
     {
-         
+        
     }
-    
     
 }
