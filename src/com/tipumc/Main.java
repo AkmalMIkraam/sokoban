@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException, Exception {
         Vector<String> board = new Vector<String>();
 
-        BufferedReader br = new BufferedReader(new FileReader("/Users/johanschag/NetBeansProjects/sokoban/maps/all.slc00001.in"));
+        BufferedReader br = new BufferedReader(new FileReader("maps/all.slc00001.in"));
         //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String line;
