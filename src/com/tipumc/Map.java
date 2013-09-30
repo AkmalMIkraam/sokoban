@@ -20,7 +20,14 @@ public final class Map {
         }
         
     }
-    
+    public int getHeight()
+    {
+        return this.height;
+    }
+    public int getWidth()
+    {
+        return this.width;
+    }
 
     public boolean isEmpty(int x, int y)
     {
@@ -62,6 +69,6 @@ public final class Map {
     }
     
     private Vector<String> startMap;
-    public int height;
-    public int width;
+    private int height;
+    private int width;
 }

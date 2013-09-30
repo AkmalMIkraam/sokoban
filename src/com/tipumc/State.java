@@ -53,12 +53,12 @@ public class State {
     
     public int getHeight()
     {
-        return this.map.height;
+        return this.map.getHeight();
     }
     
     public int getWidth()
     {
-        return this.map.width;
+        return this.map.getWidth();
     }
             
     /**
