@@ -10,6 +10,15 @@ public final class Map {
     public Map(Vector<String> map)
     {
         startMap = map;
+        height = map.size();
+        width = 0;
+        for (int i = 0; i < height; i++) {
+            if (map.get(i).length() > width)
+            {
+                width = map.get(i).length();
+            }
+        }
+        
     }
     
 
@@ -53,4 +62,6 @@ public final class Map {
     }
     
     private Vector<String> startMap;
+    public int height;
+    public int width;
 }
