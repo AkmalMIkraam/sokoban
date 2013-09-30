@@ -32,7 +32,7 @@ public class State {
                     return new Position(x, y);
             }
         }
-        throw new Exception("");
+        throw new Exception("Could not find the player in the board");
     }
 
     private ArrayList<Position> findBoxes(Vector<String> board)
