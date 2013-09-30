@@ -94,21 +94,9 @@ public class State {
         return map.isWall(x, y);
     }
 
-
-    /**
-     * Probably need additional search functions for specialized searching
-     */
-
-    /**
-     *
-     * @param startX
-     * @param startY
-     * @param test Test to determine if the search is successful
-     * @return Could maybe return something with less overhead than position, null if no path
-     */
-    public ArrayList<Position> findPath(int startX, int startY, GoalTest test)
+    public Position getPlayer()
     {
-        throw new NotImplementedException();
+        return player;
     }
 
     /**

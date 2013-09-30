@@ -11,4 +11,5 @@
 *.class
 build.xml
 nbproject
-/build/
+maps
+build/
