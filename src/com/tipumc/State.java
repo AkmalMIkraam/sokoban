@@ -32,7 +32,6 @@ public class State {
                     return new Position(x, y);
             }
         }
-        throw new Exception("")
     }
 
     /**
