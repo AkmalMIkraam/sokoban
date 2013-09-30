@@ -41,9 +41,16 @@ public final class Map {
      */
     public String toString()
     {
-        
-        
+        String out = new String("");
+        for (int i = 0; i < startMap.size(); i++) {
+            if (i==0) {
+                out += startMap.get(i);
+            } else {
+                out += System.getProperty("line.separator")+startMap.get(i);
+            }
+        }
+        return out;
     }
-    private Vector<String> startMap;
     
+    private Vector<String> startMap;
 }
