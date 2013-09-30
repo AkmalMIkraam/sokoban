@@ -48,7 +48,13 @@ public final class Map {
     public boolean isGoal(int x, int y)
     {
         char c = startMap.get(y).charAt(x);
-        return (c == '.' | c=='*');
+        return (c == '.');
+    }
+    
+    public boolean isGoalOnBox(int x, int y)
+    {
+        char c = startMap.get(y).charAt(x);
+        return (c == '*'); 
     }
 
     /**

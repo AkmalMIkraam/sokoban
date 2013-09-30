@@ -69,7 +69,7 @@ public class State {
      */
     public boolean isFree(int x, int y)
     {
-        throw new NotImplementedException();
+        return (this.map.isEmpty(x, y)|this.map.isGoal(x, y));
     }
 
     /*
