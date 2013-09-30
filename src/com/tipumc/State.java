@@ -18,7 +18,21 @@ public class State {
     {
         this.map = map;
         //Read in the initial position of the boxes and the player.
-        throw new NotImplementedException();
+        this.player = findPlayer(board);
+    }
+
+    private Position findPlayer(Vector<String> board)
+    {
+        for (int y = 0; y < board.size(); ++y)
+        {
+            for (int x = 0; x < board[y].size(); ++x)
+            {
+                char c = board.get(y).charAt(x);
+                if (c == '@' || c == '+')
+                    return new Position(x, y);
+            }
+        }
+        throw new Exception("")
     }
 
     /**
@@ -35,6 +49,10 @@ public class State {
     /*
     is* functions for convenience in this class which only forwards
      */
+    public boolean isBox(int x, int y)
+    {
+        return false;
+    }
     public boolean isEmpty(int x, int y)
     {
         return map.isEmpty(x, y);
