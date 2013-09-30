@@ -32,7 +32,10 @@ public final class Map {
      */
     public String toString()
     {
-        throw new NotImplementedException();
+        String out = new String("");
+        for (int i = 0; i < 10; i++) {
+        }
+        return out;
     }
     
     
