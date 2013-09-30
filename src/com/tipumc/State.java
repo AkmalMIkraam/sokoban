@@ -14,27 +14,53 @@ public class State {
         this.boxes = boxes;
     }
 
-    public State(Map map, Vector<String> board)
+    public State(Map map, Vector<String> board) throws Exception
     {
         this.map = map;
         //Read in the initial position of the boxes and the player.
         this.player = findPlayer(board);
     }
 
-    private Position findPlayer(Vector<String> board)
+    private Position findPlayer(Vector<String> board) throws Exception
     {
         for (int y = 0; y < board.size(); ++y)
         {
-            for (int x = 0; x < board[y].size(); ++x)
+            for (int x = 0; x < board.get(y).length(); ++x)
             {
                 char c = board.get(y).charAt(x);
                 if (c == '@' || c == '+')
                     return new Position(x, y);
             }
         }
-        throw new Exception("")
+        throw new Exception("Could not find the player in the board");
     }
 
+    private ArrayList<Position> findBoxes(Vector<String> board)
+    {
+        ArrayList<Position> boxes = new ArrayList<Position>();
+        for (int y = 0; y < board.size(); ++y)
+        {
+            for (int x = 0; x < board.get(y).length(); ++x)
+            {
+                char c = board.get(y).charAt(x);
+                if (c == '$' || c == '*')
+                    boxes.add(new Position(x, y));
+            }
+        }
+        return boxes;
+    }
+
+    
+    public int getHeight()
+    {
+        return this.map.getHeight();
+    }
+    
+    public int getWidth()
+    {
+        return this.map.getWidth();
+    }
+            
     /**
      *
      * @param x
@@ -43,7 +69,7 @@ public class State {
      */
     public boolean isFree(int x, int y)
     {
-        throw new NotImplementedException();
+        return (this.map.isEmpty(x, y)|this.map.isGoal(x, y));
     }
 
     /*
@@ -68,21 +94,9 @@ public class State {
         return map.isWall(x, y);
     }
 
-
-    /**
-     * Probably need additional search functions for specialized searching
-     */
-
-    /**
-     *
-     * @param startX
-     * @param startY
-     * @param test Test to determine if the search is successful
-     * @return Could maybe return something with less overhead than position, null if no path
-     */
-    public ArrayList<Position> findPath(int startX, int startY, GoalTest test)
+    public Position getPlayer()
     {
-        throw new NotImplementedException();
+        return player;
     }
 
     /**
