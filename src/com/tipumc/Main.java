@@ -8,7 +8,7 @@ public class Main {
     /**
      * @param args
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, Exception {
         Vector<String> board = new Vector<String>();
 
         BufferedReader br = new BufferedReader(
