@@ -11,8 +11,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Vector<String> board = new Vector<String>();
 
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new FileReader("/Users/johanschag/downloads/maps/all.slc00100.in"));
+        //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String line;
         while(br.ready()) {
@@ -20,8 +20,11 @@ public class Main {
             board.add(line);
         } // End while
 
-        Map map = new Map(board);
-        State initialState = new State(map, board);
+        System.out.println(board.elementAt(0).toString());
+        System.out.println(board.elementAt(1).toString());
+        System.out.println(board.elementAt(2).toString());
+        //Map map = new Map(board);
+        //State initialState = new State(map, board);
 
         // Access
         //char = board.get(row).charAt(col);
