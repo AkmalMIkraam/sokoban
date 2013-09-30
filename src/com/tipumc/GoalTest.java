@@ -8,6 +8,7 @@ public interface GoalTest {
      * @param x Position
      * @param y Position
      * @return True if the tile is the searched for tile
+     * test
      */
     public boolean isGoal(State state, int x, int y);
 }
