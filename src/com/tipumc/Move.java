@@ -8,6 +8,7 @@ package com.tipumc;
  * To change this template use File | Settings | File Templates.
  */
 public enum Move {
+    NONE,
     LEFT,
     RIGHT,
     UP,
