@@ -50,6 +50,17 @@ public class State {
         return boxes;
     }
 
+    
+    public int getHeight()
+    {
+        return this.map.getHeight();
+    }
+    
+    public int getWidth()
+    {
+        return this.map.getWidth();
+    }
+            
     /**
      *
      * @param x
