@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException, Exception {
         Vector<String> board = new Vector<String>();
 
-        BufferedReader br = new BufferedReader(new FileReader("/Users/johanschag/downloads/maps/all.slc00001.in"));
+        BufferedReader br = new BufferedReader(new FileReader("/Users/johanschag/NetBeansProjects/sokoban/maps/all.slc00001.in"));
         //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String line;
@@ -25,7 +25,7 @@ public class Main {
         Map map = new Map(board);
         
         System.out.println(map.toString());
-//        State initialState = new State(map, board);
+        State initialState = new State(map, board);
 
         // Access
         //char = board.get(row).charAt(col);
