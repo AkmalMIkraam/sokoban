@@ -5,6 +5,7 @@ public final class Position {
     {
         this.x = x;
         this.y = y;
+		
     }
 
     public String toString()
