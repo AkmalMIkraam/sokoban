@@ -1,5 +1,6 @@
 package com.tipumc;
 
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Vector;
@@ -8,22 +9,30 @@ public final class Map {
 
     public Map(Vector<String> map)
     {
-        throw new NotImplementedException();
+        startMap = map;
     }
+    
 
     public boolean isEmpty(int x, int y)
     {
-        throw new NotImplementedException();
+        char c = startMap.get(y).charAt(x);
+        return (c == ' ');
+        
+        
     }
 
     public boolean isWall(int x, int y)
     {
-        throw new NotImplementedException();
+        char c = startMap.get(y).charAt(x);
+        return (c == '#');
+        
+        
     }
 
     public boolean isGoal(int x, int y)
     {
-        throw new NotImplementedException();
+        char c = startMap.get(y).charAt(x);
+        return (c == '.' | c=='*');
     }
 
     /**
@@ -32,8 +41,16 @@ public final class Map {
      */
     public String toString()
     {
-        throw new NotImplementedException();
+        String out = new String("");
+        for (int i = 0; i < startMap.size(); i++) {
+            if (i==0) {
+                out += startMap.get(i);
+            } else {
+                out += System.getProperty("line.separator")+startMap.get(i);
+            }
+        }
+        return out;
     }
     
-    
+    private Vector<String> startMap;
 }

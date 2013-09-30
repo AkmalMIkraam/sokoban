@@ -6,3 +6,9 @@
 
 
 *.iml
+
+*.mf
+*.class
+build.xml
+nbproject
+/build/

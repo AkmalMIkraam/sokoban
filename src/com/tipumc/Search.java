@@ -6,5 +6,4 @@ import java.util.Vector;
 
 public final class Search {
     
-    
 }
