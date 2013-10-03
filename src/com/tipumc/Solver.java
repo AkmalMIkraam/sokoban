@@ -1,13 +1,8 @@
 package com.tipumc;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class Solver {
 
-    static BoxTest isBox = new BoxTest();
+    static IsBox isBox = new IsBox();
     static IsGoal isGoal = new IsGoal();
 
     public static Iterable<Move> solve(State state)

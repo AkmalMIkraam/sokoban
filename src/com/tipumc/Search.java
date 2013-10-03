@@ -3,7 +3,6 @@ package com.tipumc;
 
 
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.Stack;
 
 public final class Search {
@@ -14,7 +13,7 @@ public final class Search {
         public ArrayList<Move> path;
     }
 
-    public static Result dfs(State state, GoalTest test, int startX, int startY)
+    public static Result dfs(State state, SearchTest test, int startX, int startY)
     {
         /* Create stack to store nodes */
         Stack<Position> nodes = new Stack<Position>();
@@ -31,7 +30,7 @@ public final class Search {
         nodes.push(currentPosition);
         
         /* Search for a path to the wanted goal */
-        while (!test.isGoal(state, currentPosition.x, currentPosition.y)){
+        while (!test.isEnd(state, currentPosition.x, currentPosition.y)){
             if(nodes.empty()){
                 System.out.println("no path");
                 return null;
