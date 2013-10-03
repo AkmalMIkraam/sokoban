@@ -22,7 +22,7 @@ public class MoveIterable implements Iterable<Move> {
             public Move next() {
                 Position prev = positions.get(previous);
                 Position current = positions.get(previous + 1);
-                Move result = Move.NONE;
+                Move result = null;
                 if (current.x - prev.x == -1)
                 {
                     result = Move.LEFT;

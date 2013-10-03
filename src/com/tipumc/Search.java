@@ -21,7 +21,7 @@ public final class Search {
         int width = state.getWidth();
         int height = state.getHeight();
         /* Create 2D array to store visited positions */
-        Move visitedPositions[][] = initiateVisitedPosition(width, height);
+        Move visitedPositions[][] = new Move[width][height];
         /* Declare an positionobject to pop to from stack */
         Position currentPosition = new Position(startX, startY);
         int x = currentPosition.x, y = currentPosition.y;
@@ -42,19 +42,19 @@ public final class Search {
             y = currentPosition.y;
             
             /* Create child nodes */
-            if (state.isFree(x, y-1) & visitedPositions[x][y-1] == Move.NONE){
+            if (state.isFree(x, y-1) & visitedPositions[x][y-1] == null){
                 Position possibleStep = new Position(x, y-1);
                 visitedPositions[x][y-1] = Move.UP;
             }
-            if (state.isFree(x, y+1) & visitedPositions[x][y+1] == Move.NONE){
+            if (state.isFree(x, y+1) & visitedPositions[x][y+1] == null){
                 Position possibleStep = new Position(x, y+1);
                 visitedPositions[x][y+1] = Move.DOWN;
             }
-            if (state.isFree(x-1, y) & visitedPositions[x-1][y] == Move.NONE){
+            if (state.isFree(x-1, y) & visitedPositions[x-1][y] == null){
                 Position possibleStep = new Position(x-1, y);
                 visitedPositions[x-1][y] = Move.LEFT;
             }
-            if (state.isFree(x+1, y) & visitedPositions[x+1][y] == Move.NONE){
+            if (state.isFree(x+1, y) & visitedPositions[x+1][y] == null){
                 Position possibleStep = new Position(x+1, y);
                 visitedPositions[x+1][y] = Move.RIGHT;
             }
@@ -75,16 +75,5 @@ public final class Search {
             path.add(moves[x][y]);
         }
         return path;
-    }
-    
-    /* Initiate the visited position matrix with Move.NONE constants */
-    private static Move[][] initiateVisitedPosition(int width, int height){
-        Move[][] twoDarray = new Move[height][width];
-        for(int i = 0; i < twoDarray.length; i++){
-            for(int j = 0; j < twoDarray[i].length; j++){
-                twoDarray[i][j] = Move.NONE;
-            }
-        }
-        return twoDarray;
     }
 }
