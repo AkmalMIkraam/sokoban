@@ -19,8 +19,6 @@ public final class Search {
     {
         /* Create stack to store nodes */
         Stack<Position> nodes = new Stack<Position>();
-        /* Boolean to check if path is found */
-        Boolean foundObject = false;
         /* Create integers that is needed */
         int width = state.getWidth();
         int height = state.getHeight();
@@ -34,52 +32,25 @@ public final class Search {
         nodes.push(currentPosition);
         
         /* Search for a path to the wanted goal */
-        while (!foundObject){
-            if(nodes.empty()){
-                System.out.println("no path");
-                return null;
-            } else {
-                currentPosition = nodes.pop();
-            }
-            
-            if (test.isEnd(state, currentPosition.x, currentPosition.y)){
-                foundObject = true;
-                //System.err.println("isEnd");
-                break;
-            }
-            
+        while (!nodes.empty()){
+            currentPosition = nodes.pop();
             x = currentPosition.x;
             y = currentPosition.y;
-            //System.err.println(x + " " + y);
             
-            /* Create child nodes */
-            if (visitedPositions[x][y-1] == null && (state.isFree(x, y-1) || test.isEnd(state, x, y-1))){
-                Position possibleStep = new Position(x, y-1);
-                visitedPositions[x][y-1] = Move.UP;
-                nodes.push(possibleStep);
+            if (test.isEnd(state, currentPosition.x, currentPosition.y)){
+                Result result = new Result();
+                result.path = getPath(visitedPositions, currentPosition.x, currentPosition.y, startX, startY);
+                result.endPosition = new Position(currentPosition.x, currentPosition.y);
+                return result;
             }
-            if (visitedPositions[x][y+1] == null && (state.isFree(x, y+1) || test.isEnd(state, x, y+1))){
-                Position possibleStep = new Position(x, y+1);
-                visitedPositions[x][y+1] = Move.DOWN;
-                nodes.push(possibleStep);
-            }
-            if (visitedPositions[x-1][y] == null && (state.isFree(x-1, y) || test.isEnd(state, x-1, y))){
-                Position possibleStep = new Position(x-1, y);
-                visitedPositions[x-1][y] = Move.LEFT;
-                nodes.push(possibleStep);
-            }
-            if (visitedPositions[x+1][y] == null && (state.isFree(x+1, y) || test.isEnd(state, x+1, y))){
-                Position possibleStep = new Position(x+1, y);
-                visitedPositions[x+1][y] = Move.RIGHT;
-                nodes.push(possibleStep);
-            }
-        }
-        //System.err.println("Outside While");
 
-        Result result = new Result();
-        result.path = getPath(visitedPositions, currentPosition.x, currentPosition.y, startX, startY);
-        result.endPosition = new Position(currentPosition.x, currentPosition.y);
-        return result;
+            /* Create child nodes */
+            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Move.UP);
+            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Move.DOWN);
+            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Move.LEFT);
+            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Move.RIGHT);
+        }
+        return null;
     }
 
     private static ArrayList<Move> getPath(Move[][] moves, int fromX, int fromY, int toX, int toY)
@@ -145,7 +116,7 @@ public final class Search {
     {
         if (visitedPositions[x][y] == null && (state.isFree(x, y) || test.isEnd(state, x, y))){
             Position possibleStep = new Position(x, y);
-            visitedPositions[x][y] = Move.RIGHT;
+            visitedPositions[x][y] = move;
             nodes.push(possibleStep);
         }
     }
