@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException, Exception {
         Vector<String> board = new Vector<String>();
 
-        BufferedReader br = new BufferedReader(new FileReader("maps/all.slc00001.in"));
+        BufferedReader br = new BufferedReader(new FileReader("maps/test.in"));
         //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String line;
@@ -30,6 +30,10 @@ public class Main {
         // Access
         //char = board.get(row).charAt(col);
 
-        System.out.println("U R R U");
+        Iterable<Move> moves = Solver.solve(initialState);
+        for (Move move : moves)
+        {
+            System.out.print(move.toString());
+        }
     } // main
 } // End Main

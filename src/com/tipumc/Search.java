@@ -42,21 +42,25 @@ public final class Search {
             y = currentPosition.y;
             
             /* Create child nodes */
-            if (state.isFree(x, y-1) & visitedPositions[x][y-1] == null){
+            if (visitedPositions[x][y-1] == null && (state.isFree(x, y-1) || test.isEnd(state, x, y-1))){
                 Position possibleStep = new Position(x, y-1);
                 visitedPositions[x][y-1] = Move.UP;
+                nodes.push(possibleStep);
             }
-            if (state.isFree(x, y+1) & visitedPositions[x][y+1] == null){
+            if (visitedPositions[x][y+1] == null && (state.isFree(x, y+1) || test.isEnd(state, x, y+1))){
                 Position possibleStep = new Position(x, y+1);
                 visitedPositions[x][y+1] = Move.DOWN;
+                nodes.push(possibleStep);
             }
-            if (state.isFree(x-1, y) & visitedPositions[x-1][y] == null){
+            if (visitedPositions[x-1][y] == null && (state.isFree(x-1, y) || test.isEnd(state, x-1, y))){
                 Position possibleStep = new Position(x-1, y);
                 visitedPositions[x-1][y] = Move.LEFT;
+                nodes.push(possibleStep);
             }
-            if (state.isFree(x+1, y) & visitedPositions[x+1][y] == null){
+            if (visitedPositions[x+1][y] == null && (state.isFree(x+1, y) || test.isEnd(state, x+1, y))){
                 Position possibleStep = new Position(x+1, y);
                 visitedPositions[x+1][y] = Move.RIGHT;
+                nodes.push(possibleStep);
             }
         }
 
@@ -70,9 +74,15 @@ public final class Search {
     {
         int x = fromX, y = fromY;
         ArrayList<Move> path = new ArrayList<Move>();
+        Position dir = new Position();
         while (x != toX && y != toY)
         {
-            path.add(moves[x][y]);
+            Move move = moves[x][y];
+            path.add(move);
+            System.err.println(x + " " + y);
+            move.getDirection(dir);
+            x -= dir.x;
+            y -= dir.y;
         }
         return path;
     }
