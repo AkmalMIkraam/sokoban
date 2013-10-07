@@ -15,7 +15,7 @@ public class Solver {
         
         Collections.reverse(pathToBox.path);
 
-        Search.Result boxToGoalPath = Search.dfs(state, isGoal, boxPosition.x, boxPosition.y);
+        Search.Result boxToGoalPath = Search.findBoxPath(state, isGoal, boxPosition.x, boxPosition.y, boxPosition.x, boxPosition.y);
 
         Collections.reverse(boxToGoalPath.path);
         

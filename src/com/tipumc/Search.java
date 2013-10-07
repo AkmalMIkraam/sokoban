@@ -118,4 +118,59 @@ public final class Search {
             nodes.push(possibleStep);
         }
     }
+
+
+    public static Result findBoxPath(State state, SearchTest test, int startX, int startY, int playerStartX, int playerStartY)
+    {
+        /* Create stack to store nodes */
+        Stack<Position> nodes = new Stack<Position>();
+        /* Create integers that is needed */
+        int width = state.getWidth();
+        int height = state.getHeight();
+        /* Create 2D array to store visited positions */
+        Direction visitedPositions[][] = new Direction[width][height];
+        /* Declare an positionobject to pop to from stack */
+        Position currentPosition = new Position(startX, startY);
+        Position playerPosition = new Position(playerStartX, playerStartY);
+        int x = currentPosition.x, y = currentPosition.y;
+
+        /* Push the start position node, for the search on the stack */
+        nodes.push(currentPosition);
+
+        /* Search for a path to the wanted goal */
+        while (!nodes.empty()){
+            if (currentPosition != null)
+            {
+                playerPosition.x = currentPosition.x;
+                playerPosition.y = currentPosition.y;
+            }
+            currentPosition = nodes.pop();
+            x = currentPosition.x;
+            y = currentPosition.y;
+
+            if (test.isEnd(state, currentPosition.x, currentPosition.y)){
+                Result result = new Result();
+                result.path = getPath(visitedPositions, currentPosition.x, currentPosition.y, startX, startY);
+                result.endPosition = new Position(currentPosition.x, currentPosition.y);
+                return result;
+            }
+
+            /* Create child nodes */
+            testBoxAddPosition(state, nodes, visitedPositions, playerPosition, x, y - 1, Direction.UP);
+            testBoxAddPosition(state, nodes, visitedPositions, playerPosition, x, y + 1, Direction.DOWN);
+            testBoxAddPosition(state, nodes, visitedPositions, playerPosition, x - 1, y, Direction.LEFT);
+            testBoxAddPosition(state, nodes, visitedPositions, playerPosition, x + 1, y, Direction.RIGHT);
+        }
+        return null;
+    }
+
+    private static void testBoxAddPosition(State state, Stack<Position> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, Direction move)
+    {
+        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)
+            && Search.dfs(state, new IsNextToBox(move), player.x, player.y) != null){
+            Position possibleStep = new Position(boxX, boxY);
+            visitedPositions[boxX][boxY] = move;
+            nodes.push(possibleStep);
+        }
+    }
 }
