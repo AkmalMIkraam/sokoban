@@ -8,7 +8,7 @@ import java.util.Stack;
 
 public final class Search {
 
-    public static boolean dfs(State state, GoalTest test, int startX, int StartY)
+    public static boolean dfs(State state, GoalTest test, int startX, int startY)
     {
         /* Create stack to store nodes */
         Stack nodes = new Stack();
