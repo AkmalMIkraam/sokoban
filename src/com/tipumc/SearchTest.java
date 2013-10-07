@@ -1,6 +1,6 @@
 package com.tipumc;
 
-public interface GoalTest {
+public interface SearchTest {
 
     /**
      * Interface to be used when determining the end of a search
@@ -9,5 +9,5 @@ public interface GoalTest {
      * @param y Position
      * @return True if the tile is the searched for tile
      */
-    public boolean isGoal(State state, int x, int y);
+    public boolean isEnd(State state, int x, int y);
 }
