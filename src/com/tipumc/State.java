@@ -19,6 +19,7 @@ public class State {
         this.map = map;
         //Read in the initial position of the boxes and the player.
         this.player = findPlayer(board);
+        this.boxes = findBoxes(board);
     }
 
     private Position findPlayer(Vector<String> board) throws Exception
@@ -77,6 +78,11 @@ public class State {
      */
     public boolean isBox(int x, int y)
     {
+        for (Position pos : boxes)
+        {
+            if (x == pos.x && y == pos.y)
+                return true;
+        }
         return false;
     }
     public boolean isEmpty(int x, int y)
