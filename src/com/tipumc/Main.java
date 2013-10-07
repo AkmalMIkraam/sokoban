@@ -5,13 +5,11 @@ import java.util.Vector;
 
 public class Main {
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) throws IOException, Exception {
+    public static Vector<String> loadBoard(String filename) throws IOException
+    {
         Vector<String> board = new Vector<String>();
 
-        BufferedReader br = new BufferedReader(new FileReader("maps/test.in"));
+        BufferedReader br = new BufferedReader(new FileReader(filename));
         //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String line;
@@ -20,10 +18,17 @@ public class Main {
             board.add(line);
         } // End while
 
+        return board;
+    }
 
-        System.out.println("Board size "+board.size());
+    /**
+     * @param args
+     */
+    public static void main(String[] args) throws IOException, Exception {
+
+        Vector<String> board = loadBoard("maps/test.in");
+
         Map map = new Map(board);
-        
         System.out.println(map.toString());
         State initialState = new State(map, board);
 
