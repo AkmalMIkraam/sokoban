@@ -29,6 +29,8 @@ public class Main {
 
         // Access
         //char = board.get(row).charAt(col);
+        
+        
 
         Iterable<Move> moves = Solver.solve(initialState);
         for (Move move : moves)
