@@ -2,8 +2,6 @@ package com.tipumc;
 
 
 
-import com.sun.jmx.remote.internal.ArrayQueue;
-
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -12,7 +10,7 @@ public final class Search {
     public static final class Result
     {
         public Position endPosition;
-        public ArrayList<Move> path;
+        public ArrayList<Direction> path;
     }
 
     public static Result dfs(State state, SearchTest test, int startX, int startY)
@@ -23,7 +21,7 @@ public final class Search {
         int width = state.getWidth();
         int height = state.getHeight();
         /* Create 2D array to store visited positions */
-        Move visitedPositions[][] = new Move[width][height];
+        Direction visitedPositions[][] = new Direction[width][height];
         /* Declare an positionobject to pop to from stack */
         Position currentPosition = new Position(startX, startY);
         int x = currentPosition.x, y = currentPosition.y;
@@ -45,26 +43,26 @@ public final class Search {
             }
 
             /* Create child nodes */
-            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Move.UP);
-            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Move.DOWN);
-            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Move.LEFT);
-            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Move.RIGHT);
+            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
+            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
+            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
+            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
         }
         return null;
     }
 
-    private static ArrayList<Move> getPath(Move[][] moves, int fromX, int fromY, int toX, int toY)
+    private static ArrayList<Direction> getPath(Direction[][] moves, int fromX, int fromY, int toX, int toY)
     {
         int x = fromX, y = fromY;
         System.err.println(toX + " TO " + toY);
         System.err.println(fromX + " FROM " + fromY);
-        ArrayList<Move> path = new ArrayList<Move>();
+        ArrayList<Direction> path = new ArrayList<Direction>();
         Position dir = new Position();
         while ((y != toY) | (x != toX) )
         {
             //System.err.println(x + " B " + y);
             
-            Move move = moves[x][y];
+            Direction move = moves[x][y];
             path.add(move);
             
             move.getDirection(dir);
@@ -83,7 +81,7 @@ public final class Search {
         int width = state.getWidth();
         int height = state.getHeight();
         /* Create 2D array to store visited positions */
-        Move visitedPositions[][] = new Move[width][height];
+        Direction visitedPositions[][] = new Direction[width][height];
         /* Declare an positionobject to pop to from stack */
         Position currentPosition = new Position(startX, startY);
         int x = currentPosition.x, y = currentPosition.y;
@@ -103,16 +101,16 @@ public final class Search {
             }
 
             /* Create child nodes */
-            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Move.UP);
-            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Move.DOWN);
-            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Move.LEFT);
-            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Move.RIGHT);
+            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
+            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
+            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
+            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
         }
 
         return result;
     }
 
-    private static void testAddPosition(State state, SearchTest test, Stack<Position> nodes, Move[][] visitedPositions, int x, int y, Move move)
+    private static void testAddPosition(State state, SearchTest test, Stack<Position> nodes, Direction[][] visitedPositions, int x, int y, Direction move)
     {
         if (visitedPositions[x][y] == null && (state.isFree(x, y) || test.isEnd(state, x, y))){
             Position possibleStep = new Position(x, y);

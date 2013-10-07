@@ -7,7 +7,7 @@ public class Solver {
     static IsBox isBox = new IsBox();
     static IsGoal isGoal = new IsGoal();
 
-    public static Iterable<Move> solve(State state)
+    public static Iterable<Direction> solve(State state)
     {
         Position player = state.getPlayer();
         Search.Result pathToBox = Search.dfs(state, isBox, player.x, player.y);

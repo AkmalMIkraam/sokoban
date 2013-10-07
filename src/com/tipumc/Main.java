@@ -37,8 +37,8 @@ public class Main {
         
         
 
-        Iterable<Move> moves = Solver.solve(initialState);
-        for (Move move : moves)
+        Iterable<Direction> moves = Solver.solve(initialState);
+        for (Direction move : moves)
         {
             System.out.print(move.toString());
         }

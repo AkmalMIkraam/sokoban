@@ -1,6 +1,6 @@
 package com.tipumc;
 
-public enum Move {
+public enum Direction {
     LEFT,
     RIGHT,
     UP,

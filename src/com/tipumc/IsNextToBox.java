@@ -6,7 +6,7 @@ public class IsNextToBox implements SearchTest {
      *
      * @param direction Is it a box in this direction?
      */
-    public IsNextToBox(Move direction)
+    public IsNextToBox(Direction direction)
     {
         direction.getDirection(dir);
     }
