@@ -117,28 +117,21 @@ public final class Search {
             }
 
             /* Create child nodes */
-            if (visitedPositions[x][y-1] == null && (state.isFree(x, y-1) || test.isEnd(state, x, y-1))){
-                Position possibleStep = new Position(x, y-1);
-                visitedPositions[x][y-1] = Move.UP;
-                nodes.push(possibleStep);
-            }
-            if (visitedPositions[x][y+1] == null && (state.isFree(x, y+1) || test.isEnd(state, x, y+1))){
-                Position possibleStep = new Position(x, y+1);
-                visitedPositions[x][y+1] = Move.DOWN;
-                nodes.push(possibleStep);
-            }
-            if (visitedPositions[x-1][y] == null && (state.isFree(x-1, y) || test.isEnd(state, x-1, y))){
-                Position possibleStep = new Position(x-1, y);
-                visitedPositions[x-1][y] = Move.LEFT;
-                nodes.push(possibleStep);
-            }
-            if (visitedPositions[x+1][y] == null && (state.isFree(x+1, y) || test.isEnd(state, x+1, y))){
-                Position possibleStep = new Position(x+1, y);
-                visitedPositions[x+1][y] = Move.RIGHT;
-                nodes.push(possibleStep);
-            }
+            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Move.UP);
+            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Move.DOWN);
+            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Move.LEFT);
+            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Move.RIGHT);
         }
 
         return result;
+    }
+
+    private static void testAddPosition(State state, SearchTest test, Stack<Position> nodes, Move[][] visitedPositions, int x, int y, Move move)
+    {
+        if (visitedPositions[x][y] == null && (state.isFree(x, y) || test.isEnd(state, x, y))){
+            Position possibleStep = new Position(x, y);
+            visitedPositions[x][y] = Move.RIGHT;
+            nodes.push(possibleStep);
+        }
     }
 }
