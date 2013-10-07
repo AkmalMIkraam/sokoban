@@ -13,12 +13,16 @@ public enum Move {
         {
         case LEFT:
             dir.x = -1;
+            break;
         case RIGHT:
             dir.x = 1;
+            break;
         case UP:
             dir.y = -1;
+            break;
         case DOWN:
             dir.y = 1;
+            break;
         }
     }
 
