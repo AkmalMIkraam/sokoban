@@ -169,19 +169,20 @@ public final class Search {
 
     private static void testBoxAddPosition(State state, Stack<State> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, Direction move, int index)
     {
-        Result result = new Result();
-        result = Search.dfs(state, new IsNextToBox(move, state.boxes.get(index).x, state.boxes.get(index).y), player.x, player.y);
-        //System.err.println(player.x + " " + player.y + " BOX: " + state.boxes.get(index).x + " " + state.boxes.get(index).y);
-        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)
-            && result != null){
-            ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
-            boxes.set(index, new Position(boxX, boxY));
-            State possibleStep = new State(state.map, new Position(state.boxes.get(index).x, state.boxes.get(index).y), boxes, result.path, state);
-            Collections.reverse(possibleStep.playerPath);
-            possibleStep.playerPath.add(move);
-            visitedPositions[boxX][boxY] = move;
-            nodes.push(possibleStep);
-            //System.err.println(result.path);
+
+        Position boxPos = state.boxes.get(index);
+        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)){
+
+            Result result = Search.dfs(state, new IsNextToBox(move, boxPos.x, boxPos.y), player.x, player.y);
+            if (result != null)
+            {
+                ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
+                boxes.set(index, new Position(boxX, boxY));
+                State possibleStep = new State(state.map, new Position(state.boxes.get(index).x, state.boxes.get(index).y), boxes, result.path, state);
+                visitedPositions[boxX][boxY] = move;
+                nodes.push(possibleStep);
+                System.err.println(result.path);
+            }
         }
     }
     
