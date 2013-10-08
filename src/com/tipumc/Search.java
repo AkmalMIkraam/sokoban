@@ -100,10 +100,10 @@ public final class Search {
         while ((y != toY) | (x != toX) )
         {
             //System.err.println(x + " B " + y);
-            
+
             Direction move = moves[x][y];
             path.add(move);
-            
+
             move.getDirection(dir);
             x -= dir.x;
             y -= dir.y;
@@ -159,7 +159,7 @@ public final class Search {
     }
 
 
-    public static Result findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY, int boxIndex)
+    public static State findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY, int boxIndex)
     {
         /* Create stack to store nodes */
         Queue<State> nodes = new LinkedList<State>();
@@ -183,10 +183,7 @@ public final class Search {
             y = currentState.boxes.get(boxIndex).y;
 
             if (test.isEnd(state, x, y)){
-                Result result = new Result();
-                result.endPosition = currentState.player;
-                result.state = currentState;
-                return result;
+                return currentState;
             }
 
             /* Create child nodes */
