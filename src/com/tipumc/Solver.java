@@ -10,18 +10,16 @@ public class Solver {
     public static Iterable<Direction> solve(State state)
     {
         Position player = state.getPlayer();
-        //Search.Result pathToBox = Search.dfs(state, isBox, player.x, player.y);
-        Position boxPosition = state.boxes.get(0);
+        Search.Result boxToGoal = new Search.Result();
+        boxToGoal.state = state;
+        int index = 0;
         
-        //Collections.reverse(pathToBox.path);
-
-        Search.Result boxToGoalPath = Search.findBoxPath(state, isGoal, boxPosition.x, boxPosition.y, player.x, player.y, 0);
+        for (Position box : state.boxes)
+        {
+            boxToGoal = Search.findBoxPath(boxToGoal.state, isGoal, box.x, box.y, boxToGoal.state.player.x, boxToGoal.state.player.y, index);
+            index++;
+        }
         
-        System.err.println(boxToGoalPath.endPosition);
-
-        //Collections.reverse(boxToGoalPath.path);
-        
-        //pathToBox.path.addAll(boxToGoalPath.path);
-        return boxToGoalPath.path;
+        return Search.getPlayerPath(boxToGoal.state);
     }
 }

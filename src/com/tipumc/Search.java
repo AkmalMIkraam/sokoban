@@ -11,6 +11,7 @@ public final class Search {
     {
         public Position endPosition;
         public ArrayList<Direction> path;
+        public State state;
     }
 
     public static Result dfs(State state, SearchTest test, int startX, int startY)
@@ -192,6 +193,7 @@ public final class Search {
                 //result.path = getPath(visitedPositions, x, y, startX, startY);
                 result.path = getPlayerPath(currentState);
                 result.endPosition = currentState.player;
+                result.state = currentState;
                 return result;
             }
 
