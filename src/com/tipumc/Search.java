@@ -2,8 +2,9 @@ package com.tipumc;
 
 
 
-import java.util.ArrayList;
-import java.util.Stack;
+import com.sun.jmx.remote.internal.ArrayQueue;
+
+import java.util.*;
 
 public final class Search {
 
@@ -35,6 +36,45 @@ public final class Search {
             x = currentPosition.x;
             y = currentPosition.y;
             
+            if (test.isEnd(state, currentPosition.x, currentPosition.y)){
+                Result result = new Result();
+                result.path = getPath(visitedPositions, currentPosition.x, currentPosition.y, startX, startY);
+                result.endPosition = new Position(currentPosition.x, currentPosition.y);
+                return result;
+            }
+
+            /* Create child nodes */
+            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
+            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
+            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
+            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
+        }
+        return null;
+    }
+
+
+    public static Result bfs(State state, SearchTest test, int startX, int startY)
+    {
+        /* Create stack to store nodes */
+        Queue<Position> nodes = new LinkedList<Position>();
+        /* Create integers that is needed */
+        int width = state.getWidth();
+        int height = state.getHeight();
+        /* Create 2D array to store visited positions */
+        Direction visitedPositions[][] = new Direction[width][height];
+        /* Declare an positionobject to pop to from stack */
+        Position currentPosition = new Position(startX, startY);
+        int x = currentPosition.x, y = currentPosition.y;
+
+        /* Push the start position node, for the search on the stack */
+        nodes.add(currentPosition);
+
+        /* Search for a path to the wanted goal */
+        while (!nodes.isEmpty()){
+            currentPosition = nodes.remove();
+            x = currentPosition.x;
+            y = currentPosition.y;
+
             if (test.isEnd(state, currentPosition.x, currentPosition.y)){
                 Result result = new Result();
                 result.path = getPath(visitedPositions, currentPosition.x, currentPosition.y, startX, startY);
@@ -110,12 +150,12 @@ public final class Search {
         return result;
     }
 
-    private static void testAddPosition(State state, SearchTest test, Stack<Position> nodes, Direction[][] visitedPositions, int x, int y, Direction move)
+    private static void testAddPosition(State state, SearchTest test, Collection<Position> nodes, Direction[][] visitedPositions, int x, int y, Direction move)
     {
         if (visitedPositions[x][y] == null & (state.isFree(x, y) | test.isEnd(state, x, y))){
             Position possibleStep = new Position(x, y);
             visitedPositions[x][y] = move;
-            nodes.push(possibleStep);
+            nodes.add(possibleStep);
         }
     }
 
@@ -171,7 +211,7 @@ public final class Search {
         Position boxPos = state.boxes.get(index);
         if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)){
 
-            Result result = Search.dfs(state, new IsNextToBox(move, boxPos.x, boxPos.y), player.x, player.y);
+            Result result = Search.bfs(state, new IsNextToBox(move, boxPos.x, boxPos.y), player.x, player.y);
             if (result != null)
             {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
