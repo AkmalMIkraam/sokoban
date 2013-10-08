@@ -19,7 +19,8 @@ public final class Map {
         }
 
         mapMatrix = new char[height][width];
-        Arrays.fill(mapMatrix, ' ');
+        for (char[] row : mapMatrix)
+            Arrays.fill(row, ' ');
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).length(); j++) {
                 char c = startMap.get(i).charAt(j);

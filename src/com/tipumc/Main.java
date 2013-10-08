@@ -29,7 +29,7 @@ public class Main {
         Vector<String> board = loadBoard("maps/test.in");
 
         Map map = new Map(board);
-        System.out.println(map.toString());
+        System.err.println(map.toString());
         State initialState = new State(map, board);
         String toPrint = new String();
         
