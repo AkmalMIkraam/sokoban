@@ -4,6 +4,7 @@ package com.tipumc;
 
 import java.util.*;
 
+
 public final class Search {
 
     public static final class Result
@@ -161,7 +162,7 @@ public final class Search {
     public static Result findBoxPath(State state, SearchTest test, int startX, int startY, int playerStartX, int playerStartY, int index)
     {
         /* Create stack to store nodes */
-        Stack<State> nodes = new Stack<State>();
+        Queue<State> nodes = new LinkedList<State>();
         /* Create integers that is needed */
         int width = state.getWidth();
         int height = state.getHeight();
@@ -173,24 +174,24 @@ public final class Search {
         int x /*= currentPosition.x*/, y /*= currentPosition.y*/;
 
         /* Push the start position node, for the search on the stack */
-        nodes.push(currentState);
+        nodes.add(currentState);
 
         /* Search for a path to the wanted goal */
-        while (!nodes.empty()){
+        while (!nodes.isEmpty()){
             /*if (currentPosition != null)
             {
                 playerPosition.x = currentPosition.x;
                 playerPosition.y = currentPosition.y;
             }*/
-            currentState = nodes.pop();
+            currentState = nodes.remove();
             x = currentState.boxes.get(index).x;
             y = currentState.boxes.get(index).y;
 
             if (test.isEnd(state, x, y)){
                 Result result = new Result();
-                result.path = getPath(visitedPositions, x, y, startX, startY);
-                //result.path = getPlayerPath(currentState);
-                result.endPosition = new Position(x, y);
+                //result.path = getPath(visitedPositions, x, y, startX, startY);
+                result.path = getPlayerPath(currentState);
+                result.endPosition = currentState.player;
                 return result;
             }
 
@@ -204,8 +205,9 @@ public final class Search {
         return null;
     }
 
-    private static void testBoxAddPosition(State state, Stack<State> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, Direction move, int index)
+    private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, Direction move, int index)
     {
+
         Position boxPos = state.boxes.get(index);
         if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)){
 
@@ -215,9 +217,10 @@ public final class Search {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
                 boxes.set(index, new Position(boxX, boxY));
                 State possibleStep = new State(state.map, new Position(state.boxes.get(index).x, state.boxes.get(index).y), boxes, result.path, state);
+                Collections.reverse(possibleStep.playerPath);
+                possibleStep.playerPath.add(move);
                 visitedPositions[boxX][boxY] = move;
-                nodes.push(possibleStep);
-                System.err.println(result.path);
+                nodes.add(possibleStep);
             }
         }
     }
@@ -227,7 +230,14 @@ public final class Search {
             return current.playerPath;
         } else {
             ArrayList<Direction> tempPath = getPlayerPath(current.parent);
-            tempPath.addAll(current.playerPath);
+            if (tempPath == null){
+                tempPath = new ArrayList<Direction>(current.playerPath);
+                //Collections.reverse(tempPath);
+            } else {
+                tempPath.addAll(current.playerPath);
+            }
+            System.err.println("playerPath : " + current.playerPath);
+            System.err.println("BoxPosition: " + current.boxes.get(0).x + " " + current.boxes.get(0).y);
             return tempPath;
         }
         

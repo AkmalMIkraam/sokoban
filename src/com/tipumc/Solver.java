@@ -16,8 +16,10 @@ public class Solver {
         //Collections.reverse(pathToBox.path);
 
         Search.Result boxToGoalPath = Search.findBoxPath(state, isGoal, boxPosition.x, boxPosition.y, player.x, player.y, 0);
+        
+        System.err.println(boxToGoalPath.endPosition);
 
-        Collections.reverse(boxToGoalPath.path);
+        //Collections.reverse(boxToGoalPath.path);
         
         //pathToBox.path.addAll(boxToGoalPath.path);
         return boxToGoalPath.path;
