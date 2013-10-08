@@ -16,7 +16,7 @@ public class Solver {
 
         for (Position box : state.boxes)
         {
-            boxToGoal = Search.findBoxPath(boxToGoal.state, isGoal, box.x, box.y, boxToGoal.state.player.x, boxToGoal.state.player.y, index);
+            boxToGoal = Search.findBoxPath(boxToGoal.state, isGoal, boxToGoal.state.player.x, boxToGoal.state.player.y, index);
             index++;
         }
         

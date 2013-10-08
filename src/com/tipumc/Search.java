@@ -184,7 +184,6 @@ public final class Search {
 
             if (test.isEnd(state, x, y)){
                 Result result = new Result();
-                result.path = getPlayerPath(currentState);
                 result.endPosition = currentState.player;
                 result.state = currentState;
                 return result;
@@ -231,8 +230,9 @@ public final class Search {
             } else {
                 tempPath.addAll(current.playerPath);
             }
-            System.err.println("playerPath : " + current.playerPath);
-            System.err.println("BoxPosition: " + current.boxes.get(0).x + " " + current.boxes.get(0).y);
+            //System.err.println(current.toString());
+            //System.err.println("playerPath : " + current.playerPath);
+            //System.err.println("BoxPosition: " + current.boxes.get(0).x + " " + current.boxes.get(0).y);
             return tempPath;
         }
         
