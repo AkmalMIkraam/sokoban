@@ -1,5 +1,6 @@
 package com.tipumc;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 public final class Map {
@@ -16,10 +17,11 @@ public final class Map {
                 width = map.get(i).length();
             }
         }
-        
+
         mapMatrix = new char[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        Arrays.fill(mapMatrix, ' ');
+        for (int i = 0; i < map.size(); i++) {
+            for (int j = 0; j < map.get(i).length(); j++) {
                 char c = startMap.get(i).charAt(j);
                 if (c == '#' | c == '.') {
                     mapMatrix[i][j] = startMap.get(i).charAt(j);
