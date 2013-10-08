@@ -52,7 +52,6 @@ public final class Search {
         return null;
     }
 
-
     public static Result bfs(State state, SearchTest test, int startX, int startY)
     {
         /* Create stack to store nodes */
@@ -160,7 +159,7 @@ public final class Search {
     }
 
 
-    public static Result findBoxPath(State state, SearchTest test, int startX, int startY, int playerStartX, int playerStartY, int index)
+    public static Result findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY, int boxIndex)
     {
         /* Create stack to store nodes */
         Queue<State> nodes = new LinkedList<State>();
@@ -179,18 +178,12 @@ public final class Search {
 
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
-            /*if (currentPosition != null)
-            {
-                playerPosition.x = currentPosition.x;
-                playerPosition.y = currentPosition.y;
-            }*/
             currentState = nodes.remove();
-            x = currentState.boxes.get(index).x;
-            y = currentState.boxes.get(index).y;
+            x = currentState.boxes.get(boxIndex).x;
+            y = currentState.boxes.get(boxIndex).y;
 
             if (test.isEnd(state, x, y)){
                 Result result = new Result();
-                //result.path = getPath(visitedPositions, x, y, startX, startY);
                 result.path = getPlayerPath(currentState);
                 result.endPosition = currentState.player;
                 result.state = currentState;
@@ -198,10 +191,10 @@ public final class Search {
             }
 
             /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, Direction.UP, index);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, Direction.DOWN, index);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, Direction.LEFT, index);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, Direction.RIGHT, index);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, Direction.UP, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, Direction.DOWN, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, Direction.LEFT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, Direction.RIGHT, boxIndex);
         }
         System.err.println("no path");
         return null;
@@ -209,16 +202,16 @@ public final class Search {
 
     private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, Direction move, int index)
     {
-
-        Position boxPos = state.boxes.get(index);
-        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)){
-
-            Result result = Search.bfs(state, new IsNextToBox(move, boxPos.x, boxPos.y), player.x, player.y);
+        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY))
+        {
+            Position boxPos = state.boxes.get(index);
+            //Check that the player can actually move into position to push the box
+            Result result = Search.bfs(state, new IsAtPosition(move, boxPos.x, boxPos.y), player.x, player.y);
             if (result != null)
             {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
                 boxes.set(index, new Position(boxX, boxY));
-                State possibleStep = new State(state.map, new Position(state.boxes.get(index).x, state.boxes.get(index).y), boxes, result.path, state);
+                State possibleStep = new State(state.map, new Position(boxPos.x, boxPos.y), boxes, result.path, state);
                 Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
                 visitedPositions[boxX][boxY] = move;

@@ -113,7 +113,40 @@ public class State {
      */
     public String toString()
     {
-        throw new NotImplementedException();
+        String stringOut = "";
+        boolean boxBool, playerBool;
+        for (int i = 0; i < map.getHeight(); i++) { // For y-coordinates
+            for (int j = 0; j < map.getWidth(); j++) { // For x-coordinates
+                // See if there is a box with these exact coordinates
+                boxBool = false;
+                playerBool = false;
+                for (int b = 0; b < boxes.size(); b++) {
+                    if (boxes.get(b).x == j & boxes.get(b).y == i) {
+                        boxBool = true;
+                    } 
+                }
+                // See if there is a player with these exact coordinates
+                if (player.x == j & player.y == i) {
+                    playerBool = true;
+                }
+                // Add to the string
+                if (boxBool & map.mapMatrix[i][j] == '.') {
+                    stringOut += '*';
+                } else if (playerBool & map.mapMatrix[i][j] == '.') {
+                    stringOut += '+';
+                } else if (playerBool){
+                    stringOut += '@';
+                } else if (boxBool) {
+                    stringOut += '$';
+                } else {
+                    stringOut += map.mapMatrix[i][j];
+                }
+            }
+            if (i < map.getHeight()-1) { // No new line on last line
+                stringOut += System.getProperty("line.separator"); // New line
+            }
+        }
+        return stringOut;
     }
 
     /**

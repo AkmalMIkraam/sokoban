@@ -13,7 +13,7 @@ public class Solver {
         Search.Result boxToGoal = new Search.Result();
         boxToGoal.state = state;
         int index = 0;
-        
+
         for (Position box : state.boxes)
         {
             boxToGoal = Search.findBoxPath(boxToGoal.state, isGoal, box.x, box.y, boxToGoal.state.player.x, boxToGoal.state.player.y, index);
