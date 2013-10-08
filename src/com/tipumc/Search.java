@@ -11,6 +11,7 @@ public final class Search {
     {
         public Position endPosition;
         public ArrayList<Direction> path;
+        public State state;
     }
 
     public static Result dfs(State state, SearchTest test, int startX, int startY)

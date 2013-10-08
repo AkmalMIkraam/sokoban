@@ -4,6 +4,7 @@ import java.util.Vector;
 
 public final class Map {
 
+
     public Map(Vector<String> map)
     {
         startMap = map;
@@ -13,6 +14,23 @@ public final class Map {
             if (map.get(i).length() > width)
             {
                 width = map.get(i).length();
+            }
+        }
+        
+        mapMatrix = new char[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                char c = startMap.get(i).charAt(j);
+                if (c == '#' | c == '.') {
+                    mapMatrix[i][j] = startMap.get(i).charAt(j);
+                }
+                else if (c == '+' | c == '*') {
+                    mapMatrix[i][j] = '.';
+                }
+                else
+                {
+                    mapMatrix[i][j] = ' ';
+                }
             }
         }
         
@@ -71,6 +89,7 @@ public final class Map {
         return out;
     }
     
+    public char[][] mapMatrix;
     private Vector<String> startMap;
     private int height;
     private int width;
