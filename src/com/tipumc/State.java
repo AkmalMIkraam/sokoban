@@ -7,11 +7,13 @@ import java.util.Vector;
 
 public class State {
 
-    public State(Map map, Position player, ArrayList<Position> boxes)//More parameters for player and boxes
+    public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent)//More parameters for player and boxes
     {
         this.map = map;
         this.player = player;
         this.boxes = boxes;
+        this.playerPath = playerPath;
+        this.parent = parent;
     }
 
     public State(Map map, Vector<String> board) throws Exception
@@ -70,7 +72,7 @@ public class State {
      */
     public boolean isFree(int x, int y)
     {
-        return (this.map.isEmpty(x, y)|this.map.isGoal(x, y));
+        return ((this.map.isEmpty(x, y)|this.map.isGoal(x, y)) & !this.isBox(x, y));
     }
 
     /*
@@ -80,7 +82,7 @@ public class State {
     {
         for (Position pos : boxes)
         {
-            if (x == pos.x && y == pos.y)
+            if (x == pos.x & y == pos.y)
                 return true;
         }
         return false;
@@ -117,7 +119,9 @@ public class State {
     /**
      * We don't necessarily have to store objects like this but it would work as a start.
      */
-    private ArrayList<Position> boxes;
-    private Position player;
-    private Map map;
+    public ArrayList<Position> boxes;
+    public Position player;
+    public Map map;
+    public ArrayList<Direction> playerPath;
+    public State parent = null;
 }

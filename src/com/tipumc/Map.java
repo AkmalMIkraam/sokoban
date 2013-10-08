@@ -29,7 +29,7 @@ public final class Map {
     public boolean isEmpty(int x, int y)
     {
         char c = startMap.get(y).charAt(x);
-        return (c == ' ');
+        return (c == ' ' | c == '@');
         
         
     }
