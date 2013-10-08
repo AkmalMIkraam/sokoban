@@ -4,6 +4,7 @@ package com.tipumc;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Collections;
 
 public final class Search {
 
@@ -150,8 +151,8 @@ public final class Search {
 
             if (test.isEnd(state, x, y)){
                 Result result = new Result();
-                result.path = getPath(visitedPositions, x, y, startX, startY);
-                //result.path = getPlayerPath(currentState);
+                //result.path = getPath(visitedPositions, x, y, startX, startY);
+                result.path = getPlayerPath(currentState);
                 result.endPosition = new Position(x, y);
                 return result;
             }
@@ -170,15 +171,17 @@ public final class Search {
     {
         Result result = new Result();
         result = Search.dfs(state, new IsNextToBox(move, state.boxes.get(index).x, state.boxes.get(index).y), player.x, player.y);
-        System.err.println(player.x + " " + player.y + " BOX: " + state.boxes.get(index).x + " " + state.boxes.get(index).y);
+        //System.err.println(player.x + " " + player.y + " BOX: " + state.boxes.get(index).x + " " + state.boxes.get(index).y);
         if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)
             && result != null){
             ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
             boxes.set(index, new Position(boxX, boxY));
             State possibleStep = new State(state.map, new Position(state.boxes.get(index).x, state.boxes.get(index).y), boxes, result.path, state);
+            Collections.reverse(possibleStep.playerPath);
+            possibleStep.playerPath.add(move);
             visitedPositions[boxX][boxY] = move;
             nodes.push(possibleStep);
-            System.err.println(result.path);
+            //System.err.println(result.path);
         }
     }
     
@@ -187,7 +190,14 @@ public final class Search {
             return current.playerPath;
         } else {
             ArrayList<Direction> tempPath = getPlayerPath(current.parent);
-            tempPath.addAll(current.playerPath);
+            if (tempPath == null){
+                tempPath = new ArrayList<Direction>(current.playerPath);
+                //Collections.reverse(tempPath);
+            } else {
+                tempPath.addAll(current.playerPath);
+            }
+            System.err.println("playerPath : " + current.playerPath);
+            System.err.println("BoxPosition: " + current.boxes.get(0).x + " " + current.boxes.get(0).y);
             return tempPath;
         }
         

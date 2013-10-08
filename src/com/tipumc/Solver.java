@@ -17,7 +17,7 @@ public class Solver {
 
         Search.Result boxToGoalPath = Search.findBoxPath(state, isGoal, boxPosition.x, boxPosition.y, player.x, player.y, 0);
 
-        Collections.reverse(boxToGoalPath.path);
+        //Collections.reverse(boxToGoalPath.path);
         
         //pathToBox.path.addAll(boxToGoalPath.path);
         return boxToGoalPath.path;
