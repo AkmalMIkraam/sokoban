@@ -113,8 +113,6 @@ public class State {
      */
     public String toString()
     {
-        System.err.println("Boxes: "+boxes);
-        System.err.println("Box 0y: "+boxes.get(0).y);
         String stringOut = "";
         boolean boxBool, playerBool;
         for (int i = 0; i < map.getHeight(); i++) { // For y-coordinates
