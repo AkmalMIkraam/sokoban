@@ -1,5 +1,6 @@
 package com.tipumc;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class Solver {
@@ -10,18 +11,13 @@ public class Solver {
     public static Iterable<Direction> solve(State state)
     {
         Position player = state.getPlayer();
-        //Search.Result pathToBox = Search.dfs(state, isBox, player.x, player.y);
-        Position boxPosition = state.boxes.get(0);
-        
-        //Collections.reverse(pathToBox.path);
+        ArrayList<State> states = new ArrayList<State>();
 
-        Search.Result boxToGoalPath = Search.findBoxPath(state, isGoal, player.x, player.y, 0);
-        
-        System.err.println(boxToGoalPath.endPosition);
+        for (int ii = 0; ii < state.boxes.size(); ++ii)
+        {
+            states.add(Search.findBoxPath(state, isGoal, player.x, player.y, ii));
+        }
 
-        //Collections.reverse(boxToGoalPath.path);
-        
-        //pathToBox.path.addAll(boxToGoalPath.path);
-        return boxToGoalPath.path;
+        return Search.getPlayerPath(states.get(0));
     }
 }
