@@ -2,8 +2,6 @@ package com.tipumc;
 
 
 
-import com.sun.jmx.remote.internal.ArrayQueue;
-
 import java.util.*;
 
 public final class Search {
@@ -211,7 +209,7 @@ public final class Search {
         Position boxPos = state.boxes.get(index);
         if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY)){
 
-            Result result = Search.bfs(state, new IsNextToBox(move, boxPos.x, boxPos.y), player.x, player.y);
+            Result result = Search.bfs(state, new IsAtPosition(move, boxPos.x, boxPos.y), player.x, player.y);
             if (result != null)
             {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
