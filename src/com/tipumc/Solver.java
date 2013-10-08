@@ -11,13 +11,16 @@ public class Solver {
     public static Iterable<Direction> solve(State state)
     {
         Position player = state.getPlayer();
-        ArrayList<State> states = new ArrayList<State>();
+        Search.Result boxToGoal = new Search.Result();
+        boxToGoal.state = state;
+        int index = 0;
 
-        for (int ii = 0; ii < state.boxes.size(); ++ii)
+        for (Position box : state.boxes)
         {
-            states.add(Search.findBoxPath(state, isGoal, player.x, player.y, ii));
+            boxToGoal = Search.findBoxPath(boxToGoal.state, isGoal, box.x, box.y, boxToGoal.state.player.x, boxToGoal.state.player.y, index);
+            index++;
         }
-
-        return Search.getPlayerPath(states.get(0));
+        
+        return Search.getPlayerPath(boxToGoal.state);
     }
 }
