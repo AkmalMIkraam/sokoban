@@ -31,22 +31,18 @@ public class Main {
         Map map = new Map(board);
         System.err.println(map.toString());
         State initialState = new State(map, board);
-        String toPrint = new String();
-        
-        toPrint = "";
-
-        // Access
-        //char = board.get(row).charAt(col);
-        
-        
 
         Iterable<Direction> moves = Solver.solve(initialState);
-        for (Direction move : moves)
+        if (moves != null)
         {
-            toPrint += move.toString() + " ";
-            //System.out.print(move.toString());
+            for (Direction move : moves)
+            {
+                System.out.print(move.toString());
+            }
         }
-        
-        System.out.println(toPrint);
+        else
+        {
+            System.out.println("no path");
+        }
     } // main
 } // End Main
