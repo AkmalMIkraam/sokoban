@@ -7,13 +7,14 @@ import java.util.Vector;
 
 public class State {
 
-    public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent)//More parameters for player and boxes
+    public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent, ArrayList<Position> goals)//More parameters for player and boxes
     {
         this.map = map;
         this.player = player;
         this.boxes = boxes;
         this.playerPath = playerPath;
         this.parent = parent;
+        this.goals = goals;
     }
 
     public State(Map map, Vector<String> board) throws Exception
@@ -22,6 +23,7 @@ public class State {
         //Read in the initial position of the boxes and the player.
         this.player = findPlayer(board);
         this.boxes = findBoxes(board);
+        this.goals = findGoals(board);
     }
 
     private Position findPlayer(Vector<String> board) throws Exception
@@ -72,11 +74,13 @@ public class State {
        int numOfBoxOnGoal = 0;
         for (Position boxPos : boxes){
             for(Position goalPos : goals){
+                System.err.println(goalPos + " " + boxPos);
                 if(boxPos.equals(goalPos)){
-                    numOfBoxOnGoal ++;
+                    numOfBoxOnGoal++;
                 }
             }
         }
+        
         return(numOfBoxOnGoal == goals.size());
     }
 

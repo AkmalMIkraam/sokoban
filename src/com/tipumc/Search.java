@@ -179,18 +179,29 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
             currentState = nodes.remove();
-            x = currentState.boxes.get(boxIndex).x;
-            y = currentState.boxes.get(boxIndex).y;
+            
 
-            if (test.isEnd(state, x, y)){
+            if (test.isEnd(currentState, 0, 0)){
                 return currentState;
             }
+            boxIndex = 0;
 
             /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, x, y - 2, Direction.UP, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, x, y + 2, Direction.DOWN, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, x - 2, y, Direction.LEFT, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, x + 2, y, Direction.RIGHT, boxIndex);
+            for (Position box : currentState.boxes)
+            {
+                x = box.x;
+                y = box.y;
+                
+                //System.err.println(x + " " + y);
+                
+                testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, x, y - 2, Direction.UP, boxIndex);
+                testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, x, y + 2, Direction.DOWN, boxIndex);
+                testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, x - 2, y, Direction.LEFT, boxIndex);
+                testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, x + 2, y, Direction.RIGHT, boxIndex);
+                
+                boxIndex++;
+            }
+            
         }
         System.err.println("no path");
         System.exit(0);
@@ -211,8 +222,8 @@ public final class Search {
             {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
                 boxes.set(index, new Position(boxX, boxY));
-                State possibleStep = new State(state.map, new Position(boxX2, boxY2), boxes, result.path, state);
-                //Collections.reverse(possibleStep.playerPath);
+                State possibleStep = new State(state.map, new Position(boxX2, boxY2), boxes, result.path, state, state.goals);
+                Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
                 visitedPositions[boxX][boxY] = move;
                 nodes.add(possibleStep);
@@ -226,13 +237,14 @@ public final class Search {
         } else {
             ArrayList<Direction> tempPath = getPlayerPath(current.parent);
             if (tempPath == null){
-                tempPath = new ArrayList<Direction>(current.playerPath);
+                tempPath = new ArrayList<Direction>();
+                tempPath.add(current.playerPath.get(current.playerPath.size()-1));
                 //Collections.reverse(tempPath);
             } else {
                 tempPath.addAll(current.playerPath);
             }
             System.err.println(current.toString());
-            //System.err.println("playerPath : " + current.playerPath);
+            System.err.println("playerPath : " + current.playerPath);
             //System.err.println("BoxPosition: " + current.boxes.get(0).x + " " + current.boxes.get(0).y);
             return tempPath;
         }
