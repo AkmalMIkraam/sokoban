@@ -52,6 +52,21 @@ public class State {
         }
         return boxes;
     }
+    
+    private ArrayList<Position> findGoals(Vector<String> board)
+    {
+        ArrayList<Position> goals = new ArrayList<Position>();
+        for (int y = 0; y < board.size(); ++y)
+        {
+            for (int x = 0; x < board.get(y).length(); ++x)
+            {
+                char c = board.get(y).charAt(x);
+                if (c == '.')
+                    goals.add(new Position(x, y));
+            }
+        }
+        return goals;
+    }
 
     
     public int getHeight()
@@ -153,6 +168,7 @@ public class State {
      * We don't necessarily have to store objects like this but it would work as a start.
      */
     public ArrayList<Position> boxes;
+    public ArrayList<Position> goals;
     public Position player;
     public Map map;
     public ArrayList<Direction> playerPath;
