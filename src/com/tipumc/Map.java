@@ -17,6 +17,8 @@ public final class Map {
                 width = map.get(i).length();
             }
         }
+        
+        
 
         mapMatrix = new char[height][width];
         for (char[] row : mapMatrix)
@@ -37,7 +39,24 @@ public final class Map {
             }
         }
         
+         inverseMap = new Vector<String>();
+          for (int i = 0; i < map.size(); i++) {
+              String stringLine = new String();
+            for (int j = 0; j < map.get(i).length(); j++) {
+                char c = startMap.get(i).charAt(j);
+                if (c=='$'){
+                    stringLine += "."; 
+                }else if(c=='.'){
+                    stringLine += "$";
+                }
+                else{
+                    stringLine += c;
+                }
+            }
+            inverseMap.add(stringLine);   
+        }
     }
+    
     public int getHeight()
     {
         return this.height;
@@ -92,8 +111,23 @@ public final class Map {
         return out;
     }
     
+        public String inverseToString()
+    {
+        String out = new String("");
+        for (int i = 0; i < inverseMap.size(); i++) {
+            if (i==0) {
+                out += inverseMap.get(i);
+            } else {
+                out += System.getProperty("line.separator")+inverseMap.get(i);
+            }
+        }
+        return out;
+    }
+    
+    
     public char[][] mapMatrix;
     private Vector<String> startMap;
+    public Vector<String> inverseMap;
     private int height;
     private int width;
 }
