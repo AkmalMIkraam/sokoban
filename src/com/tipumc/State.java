@@ -61,11 +61,23 @@ public class State {
             for (int x = 0; x < board.get(y).length(); ++x)
             {
                 char c = board.get(y).charAt(x);
-                if (c == '.')
+                if (c == '.' | c == '*' | c == '+')
                     goals.add(new Position(x, y));
             }
         }
         return goals;
+    }
+    
+    public boolean isFinal(){
+       int numOfBoxOnGoal = 0;
+        for (Position boxPos : boxes){
+            for(Position goalPos : goals){
+                if(boxPos.equals(goalPos)){
+                    numOfBoxOnGoal ++;
+                }
+            }
+        }
+        return(numOfBoxOnGoal == goals.size());
     }
 
     
