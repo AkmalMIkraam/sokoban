@@ -80,7 +80,7 @@ public class State {
         return(numOfBoxOnGoal == goals.size());
     }
 
-     
+    
     public int getHeight()
     {
         return this.map.getHeight();
@@ -175,6 +175,26 @@ public class State {
         }
         return stringOut;
     }
+    public Vector<String> inverse(){
+       Vector <String> inverseMap = new Vector<String>();
+          for (int i = 0; i < map.size(); i++) {
+              String stringLine = new String();
+            for (int j = 0; j < map.get(i).length(); j++) {
+                char c = map.get(i).charAt(j);
+                if (c=='$'){
+                    stringLine += "."; 
+                }else if(c=='.'){
+                    stringLine += "$";
+                }
+                else{
+                    stringLine += c;
+                }
+            }
+            inverseMap.add(stringLine);   
+        }
+          return inverseMap;
+    }
+             
 
     /**
      * We don't necessarily have to store objects like this but it would work as a start.
