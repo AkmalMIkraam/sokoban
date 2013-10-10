@@ -80,7 +80,7 @@ public class State {
         return(numOfBoxOnGoal == goals.size());
     }
 
-    
+     
     public int getHeight()
     {
         return this.map.getHeight();
