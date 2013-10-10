@@ -187,28 +187,32 @@ public final class Search {
             }
 
             /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, Direction.UP, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, Direction.DOWN, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, Direction.LEFT, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, Direction.RIGHT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, x, y - 2, Direction.UP, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, x, y + 2, Direction.DOWN, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, x - 2, y, Direction.LEFT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, x + 2, y, Direction.RIGHT, boxIndex);
         }
         System.err.println("no path");
+        System.exit(0);
         return null;
     }
 
-    private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, Direction move, int index)
+    private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, int boxX2, int boxY2, Direction move, int index)
     {
-        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY))
+        //System.err.println(boxX2 + " " + boxY2);
+        //System.err.println(boxX + " " + boxY);
+        if ((visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY) ) && state.isFree(boxX2, boxY2))
         {
+            //System.err.println("IS FREE");
             Position boxPos = state.boxes.get(index);
-            //Check that the player can actually move into position to push the box
+            //Check that the player can actually move into position to pull the box
             Result result = Search.bfs(state, new IsAtPosition(move, boxPos.x, boxPos.y), player.x, player.y);
             if (result != null)
             {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
                 boxes.set(index, new Position(boxX, boxY));
-                State possibleStep = new State(state.map, new Position(boxPos.x, boxPos.y), boxes, result.path, state);
-                Collections.reverse(possibleStep.playerPath);
+                State possibleStep = new State(state.map, new Position(boxX2, boxY2), boxes, result.path, state);
+                //Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
                 visitedPositions[boxX][boxY] = move;
                 nodes.add(possibleStep);
@@ -227,7 +231,7 @@ public final class Search {
             } else {
                 tempPath.addAll(current.playerPath);
             }
-            //System.err.println(current.toString());
+            System.err.println(current.toString());
             //System.err.println("playerPath : " + current.playerPath);
             //System.err.println("BoxPosition: " + current.boxes.get(0).x + " " + current.boxes.get(0).y);
             return tempPath;

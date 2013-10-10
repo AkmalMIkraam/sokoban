@@ -55,6 +55,7 @@ public final class Map {
             }
             inverseMap.add(stringLine);   
         }
+        startMap = inverseMap;
     }
     
     public int getHeight()

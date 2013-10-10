@@ -30,7 +30,7 @@ public class Main {
 
         Map map = new Map(board);
         System.err.println(map.toString());
-        State initialState = new State(map, board);
+        State initialState = new State(map, map.inverseMap);
 
         Iterable<Direction> moves = Solver.solve(initialState);
         if (moves != null)
