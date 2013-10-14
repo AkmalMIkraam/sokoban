@@ -26,21 +26,18 @@ public class FlowSolver {
         }
         private class Edge
         {
-            public Edge(Edge reverse, Node from, Node to)
+            private Edge(Edge reverse, Node to)
             {
                 this.reverse = reverse;
-                this.from = from;
                 this.to = to;
             }
             public Edge(Node from, Node to)
             {
-                this.reverse = new Edge(this, to, from);
-                this.from = from;
+                this.reverse = new Edge(this, from);
                 this.to = to;
             }
 
             public Edge reverse;
-            public Node from;
             public Node to;
             public boolean used;
         }
@@ -48,7 +45,6 @@ public class FlowSolver {
         public Graph(State state, ArrayList<ArrayList<Position>> goals)
         {
             int numBoxes = goals.size();
-            int numNodes = (numBoxes * 2) + 2;
             HashMap<Position, Node> allGoals = new HashMap<Position, Node>();
             for (int boxIndex = 0; boxIndex < goals.size(); ++boxIndex)
             {
@@ -91,7 +87,7 @@ public class FlowSolver {
                 {
                     currentEdge.used = true;
                     currentEdge.reverse.used = false;
-                    currentEdge = currentEdge.from.parent;
+                    currentEdge = currentEdge.reverse.to.parent;
                 }
             }
             ArrayList<Link> links = new ArrayList<Link>();
