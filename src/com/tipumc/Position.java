@@ -28,5 +28,13 @@ public final class Position {
         return "{" + x + ", " + y + "}";
     }
 
+    public int hashCode()
+    {
+        int hash = 17;
+        hash = 31*hash + x;
+        hash = 31*hash + y;
+        return hash;
+    }
+
     public int x, y;
 }

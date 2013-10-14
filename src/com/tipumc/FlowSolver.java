@@ -10,19 +10,11 @@ public class FlowSolver {
     {
         public class Node
         {
-            public boolean equals(Object o)
-            {
-                if (o.getClass() == Node.class)
-                {
-                    return pos.equals(((Node)o).pos);
-                }
-                return false;
-            }
-
             public ArrayList<Edge> to = new ArrayList<Edge>();
             public Position pos; //Goal or box position
-            public Edge parent;
+            public Edge parent; //Parent field is used to get the path after bfs
         }
+
         private class Edge
         {
             private Edge(Edge reverse, Node to)
@@ -41,9 +33,14 @@ public class FlowSolver {
             public boolean used;
         }
 
+        /**
+         * Creates a graph to solve the Bi-partite matching problem using Edmonds-Karps algorithm
+         * @param state The current state of the world
+         * @param goals A list where each list is which goals are reachable from the box
+         *              at the same index
+         */
         public Graph(State state, ArrayList<ArrayList<Position>> goals)
         {
-            int numBoxes = goals.size();
             HashMap<Position, Node> allGoals = new HashMap<Position, Node>();
             for (int boxIndex = 0; boxIndex < goals.size(); ++boxIndex)
             {
@@ -67,12 +64,17 @@ public class FlowSolver {
                 goalNode.to.add(new Edge(goalNode, sink));
             }
         }
-        
+
+        /**
+         * Gives a list holding the maximum amount of matches that are possible
+         * between boxes and goals
+         * @return
+         */
         public ArrayList<Link> solveFlow()
         {
             while (true)
             {
-                //end should always be sink or null
+                //end should always be sink or null when no more matches are possible
                 Node end = bfs(source, sink);
                 if (end == null)
                     break;//End when we can no longer find a path
@@ -92,10 +94,13 @@ public class FlowSolver {
             {
                 Node box = edge.to;
                 Node goal = getGoalFor(box);
-                Link link = new Link();
-                link.box = ii;
-                link.goal = goal.pos;
-                links.add(link);
+                if (goal != null)
+                {
+                    Link link = new Link();
+                    link.box = ii;
+                    link.goal = goal.pos;
+                    links.add(link);
+                }
                 ++ii;
             }
             return links;
@@ -118,7 +123,6 @@ public class FlowSolver {
             cleanParents(from);
             Queue<Node> toVisit = new LinkedList<Node>();
             toVisit.add(from);
-            
 
             while(!toVisit.isEmpty())
             {
