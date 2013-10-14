@@ -158,6 +158,40 @@ public final class Search {
         }
     }
 
+    public static ArrayList<Position> findAllReachableGoals(State state, int boxIndex)
+    {
+        /* Create stack to store no        des */
+        Queue<State> nodes = new LinkedList<State>();
+        /* Create integers that is needed */
+        int width = state.getWidth();
+        int height = state.getHeight();
+        /* Create 2D array to store visited positions */
+        Direction visitedPositions[][] = new Direction[width][height];
+        /* Declare an positionobject to pop to from stack */
+        State currentState = state;
+        ArrayList<Position> result = new ArrayList<Position>();
+
+        /* Push the start position node, for the search on the stack */
+        nodes.add(currentState);
+
+        /* Search for a path to the wanted goal */
+        while (!nodes.isEmpty()){
+            currentState = nodes.remove();
+            int x = currentState.boxes.get(boxIndex).x;
+            int y = currentState.boxes.get(boxIndex).y;
+
+            if (Solver.isGoal.isEnd(state, x, y)){
+                result.add(new Position(x, y));
+            }
+
+            /* Create child nodes */
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, Direction.UP, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, Direction.DOWN, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, Direction.LEFT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, Direction.RIGHT, boxIndex);
+        }
+        return result;
+    }
 
     public static State findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY, int boxIndex)
     {
