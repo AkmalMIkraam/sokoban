@@ -177,18 +177,19 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
             currentState = nodes.remove();
-            int x = currentState.boxes.get(boxIndex).x;
-            int y = currentState.boxes.get(boxIndex).y;
+            Position boxPosition = currentState.boxes.get(boxIndex);
+            int x = boxPosition.x;
+            int y = boxPosition.y;
 
             if (Solver.isGoal.isEnd(state, x, y)){
                 result.add(new Position(x, y));
             }
 
             /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, Direction.UP, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, Direction.DOWN, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, Direction.LEFT, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, Direction.RIGHT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, 0, -1, Direction.UP, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, 0, 1, Direction.DOWN, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, -1, 0, Direction.LEFT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, 1, 0, Direction.RIGHT, boxIndex);
         }
         return result;
     }
@@ -205,7 +206,6 @@ public final class Search {
         /* Declare an positionobject to pop to from stack */
         State currentState = state;
         currentState.player = new Position(playerStartX, playerStartY);
-        int x /*= currentPosition.x*/, y /*= currentPosition.y*/;
 
         /* Push the start position node, for the search on the stack */
         nodes.add(currentState);
@@ -213,35 +213,39 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
             currentState = nodes.remove();
-            x = currentState.boxes.get(boxIndex).x;
-            y = currentState.boxes.get(boxIndex).y;
+            Position boxPosition = currentState.boxes.get(boxIndex);
+            int x = boxPosition.x;
+            int y = boxPosition.y;
 
             if (test.isEnd(state, x, y)){
                 return currentState;
             }
 
             /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y - 1, Direction.UP, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x, y + 1, Direction.DOWN, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x - 1, y, Direction.LEFT, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, currentState.player, x + 1, y, Direction.RIGHT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, 0, -1, Direction.UP, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, 0, 1, Direction.DOWN, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, -1, 0, Direction.LEFT, boxIndex);
+            testBoxAddPosition(currentState, nodes, visitedPositions, 1, 0, Direction.RIGHT, boxIndex);
         }
         System.err.println("no path");
         return null;
     }
 
-    private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, Position player, int boxX, int boxY, Direction move, int index)
+    private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, int dirX, int dirY, Direction move, int index)
     {
+        Position currentBoxPos =  state.boxes.get(index);
+        int boxX = currentBoxPos.x + dirX;
+        int boxY = currentBoxPos.y + dirY;
+        Position player = state.getPlayer();
         if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY))
         {
-            Position boxPos = state.boxes.get(index);
             //Check that the player can actually move into position to push the box
-            Result result = Search.bfs(state, new IsAtPosition(move, boxPos.x, boxPos.y), player.x, player.y);
+            Result result = Search.bfs(state, new IsAtPosition(move, currentBoxPos.x - dirX, currentBoxPos.y - dirY), player.x, player.y);
             if (result != null)
             {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
                 boxes.set(index, new Position(boxX, boxY));
-                State possibleStep = new State(state.map, new Position(boxPos.x, boxPos.y), boxes, result.path, state);
+                State possibleStep = new State(state.map, new Position(currentBoxPos.x, currentBoxPos.y), boxes, result.path, state);
                 Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
                 visitedPositions[boxX][boxY] = move;
