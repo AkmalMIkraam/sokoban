@@ -19,7 +19,6 @@ public class FlowSolver {
                 return false;
             }
 
-            public ArrayList<Node> from = new ArrayList<Node>();
             public ArrayList<Edge> to = new ArrayList<Edge>();
             public Position pos; //Goal or box position
             public Edge parent;
@@ -59,16 +58,13 @@ public class FlowSolver {
                         node.pos = goal;
                         allGoals.put(goal, node);
                     }
-                    node.from.add(boxNode);
                     boxNode.to.add(new Edge(boxNode, node));
                 }
                 source.to.add(new Edge(source, boxNode));
-                boxNode.from.add(source);
             }
             for (Node goalNode : allGoals.values())
             {
                 goalNode.to.add(new Edge(goalNode, sink));
-                sink.from.add(goalNode);
             }
         }
         
