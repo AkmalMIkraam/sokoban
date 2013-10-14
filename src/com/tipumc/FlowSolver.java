@@ -10,6 +10,7 @@ public class FlowSolver {
     {
         public class Node
         {
+            public ArrayList<Edge> from = new ArrayList<Edge>();
             public ArrayList<Edge> to = new ArrayList<Edge>();
             public Position pos; //Goal or box position
             public Edge parent; //Parent field is used to get the path after bfs
@@ -17,20 +18,14 @@ public class FlowSolver {
 
         private class Edge
         {
-            private Edge(Edge reverse, Node to)
+            public Edge(Node to)
             {
-                this.reverse = reverse;
-                this.to = to;
-            }
-            public Edge(Node from, Node to)
-            {
-                this.reverse = new Edge(this, from);
                 this.to = to;
             }
 
             public Edge reverse;
             public Node to;
-            public boolean used;
+            public int used;
         }
 
         /**
@@ -55,13 +50,25 @@ public class FlowSolver {
                         node.pos = goal;
                         allGoals.put(goal, node);
                     }
-                    boxNode.to.add(new Edge(boxNode, node));
+                    Edge next = new Edge(node);
+                    next.reverse = new Edge(boxNode);
+                    next.reverse.reverse = next;
+                    boxNode.to.add(next);
+                    node.from.add(next.reverse);
                 }
-                source.to.add(new Edge(source, boxNode));
+                Edge to = new Edge(boxNode);
+                to.reverse = new Edge(source);
+                to.reverse.reverse = to;
+                source.to.add(to);
+                boxNode.from.add(to.reverse);
             }
             for (Node goalNode : allGoals.values())
             {
-                goalNode.to.add(new Edge(goalNode, sink));
+                Edge to = new Edge(sink);
+                to.reverse = new Edge(goalNode);
+                to.reverse.reverse = to;
+                goalNode.to.add(to);
+                sink.from.add(to.reverse);
             }
         }
 
@@ -83,8 +90,8 @@ public class FlowSolver {
                 end.parent = null;
                 while (currentEdge != null)
                 {
-                    currentEdge.used = true;
-                    currentEdge.reverse.used = false;
+                    currentEdge.used += 1;
+                    currentEdge.reverse.used -= 1;
                     currentEdge = currentEdge.reverse.to.parent;
                 }
             }
@@ -110,7 +117,7 @@ public class FlowSolver {
         {
             for (Edge edge : box.to)
             {
-                if (edge.used)
+                if (edge.used == 1)
                 {
                     return edge.to;
                 }
@@ -133,7 +140,16 @@ public class FlowSolver {
                 }
                 for (Edge child : current.to)
                 {
-                    if (!child.used && child.to.parent == null)
+                    //1 is the capacity of the edge
+                    if (1 - child.used > 0 && child.to.parent == null)
+                    {
+                        toVisit.add(child.to);
+                        child.to.parent = child;
+                    }
+                }
+                for (Edge child : current.from)
+                {
+                    if (1 - child.used > 0 && child.to.parent == null && child.to != from)
                     {
                         toVisit.add(child.to);
                         child.to.parent = child;
