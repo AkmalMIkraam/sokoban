@@ -74,7 +74,7 @@ public class State {
        int numOfBoxOnGoal = 0;
         for (Position boxPos : boxes){
             for(Position goalPos : goals){
-                System.err.println(goalPos + " " + boxPos);
+                //System.err.println(goalPos + " " + boxPos);
                 if(boxPos.equals(goalPos)){
                     numOfBoxOnGoal++;
                 }
@@ -103,7 +103,7 @@ public class State {
      */
     public boolean isFree(int x, int y)
     {
-        return ((this.map.isEmpty(x, y)|this.map.isGoal(x, y)) & !this.isBox(x, y));
+        return ((this.map.isEmpty(x, y)|this.isGoal(x, y)) & !this.isBox(x, y));
     }
 
     /*
@@ -125,7 +125,12 @@ public class State {
 
     public boolean isGoal(int x, int y)
     {
-        return map.isGoal(x, y);
+        for (Position pos : goals)
+        {
+            if (x == pos.x & y == pos.y)
+                return true;
+        }
+        return false;
     }
 
     public boolean isWall(int x, int y)
