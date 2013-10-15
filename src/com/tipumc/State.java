@@ -7,15 +7,15 @@ import java.util.Vector;
 
 public class State implements Comparable<State>{
 
-    public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent, ArrayList<Position> goals, ArrayList<Position> playerEndPos)//More parameters for player and boxes
+    public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent)//More parameters for player and boxes
     {
         this.map = map;
         this.player = player;
         this.boxes = boxes;
         this.playerPath = playerPath;
         this.parent = parent;
-        this.goals = goals;
-        this.playerEndPos = playerEndPos;
+        this.goals = parent.goals;
+        this.playerEndPos = parent.playerEndPos;
     }
 
     public State(Map map, Vector<String> boardinv, Vector<String> board) throws Exception
