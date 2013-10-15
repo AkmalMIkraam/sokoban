@@ -3,7 +3,6 @@ package com.tipumc;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class State implements Comparable<State>{
 
@@ -18,7 +17,7 @@ public class State implements Comparable<State>{
         this.playerEndPos = parent.playerEndPos;
     }
 
-    public State(Map map, Vector<String> boardinv, Vector<String> board) throws Exception
+    public State(Map map, ArrayList<String> boardinv, ArrayList<String> board) throws Exception
     {
         this.map = map;
         //Read in the initial position of the boxes and the player.
@@ -30,7 +29,7 @@ public class State implements Comparable<State>{
         this.goals = findGoals(boardinv);
     }
 
-    private Position findPlayer(Vector<String> board) throws Exception
+    private Position findPlayer(ArrayList<String> board) throws Exception
     {
         for (int y = 0; y < board.size(); ++y)
         {
@@ -44,7 +43,7 @@ public class State implements Comparable<State>{
         throw new Exception("Could not find the player in the board");
     }
 
-    private ArrayList<Position> findBoxes(Vector<String> board)
+    private ArrayList<Position> findBoxes(ArrayList<String> board)
     {
         ArrayList<Position> boxes = new ArrayList<Position>();
         for (int y = 0; y < board.size(); ++y)
@@ -59,7 +58,7 @@ public class State implements Comparable<State>{
         return boxes;
     }
     
-    private ArrayList<Position> findGoals(Vector<String> board)
+    private ArrayList<Position> findGoals(ArrayList<String> board)
     {
         ArrayList<Position> goals = new ArrayList<Position>();
         for (int y = 0; y < board.size(); ++y)

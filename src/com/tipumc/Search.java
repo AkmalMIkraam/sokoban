@@ -297,7 +297,6 @@ public final class Search {
             if (tempPath == null){
                 tempPath = new ArrayList<Direction>();
                 tempPath.add(current.playerPath.get(current.playerPath.size()-1));
-                //Collections.reverse(tempPath);
             } else {
                 tempPath.addAll(current.playerPath);
             }
