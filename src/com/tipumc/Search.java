@@ -226,7 +226,6 @@ public final class Search {
         /* Create integers that is needed */
         int width = state.getWidth();
         int height = state.getHeight();
-        ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history;
         history = new ArrayList<ArrayList<ArrayList<ArrayList<Position>>>>(height);
         /* Create 2D array to store visited positions */
         Direction visitedPositions[][] = new Direction[width][height];
@@ -241,38 +240,50 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
             currentState = nodes.remove();
-
+            
 
             if (test.isEnd(currentState, 0, 0)){
                 return currentState;
             }
             boxIndex = 0;
-
-            System.err.println(currentState.toString());
+            
+            //System.err.println(currentState.toString());
 
             /* Create child nodes */
             for (Position box : currentState.boxes)
             {
                 x = box.x;
                 y = box.y;
-
-                testBoxAddPosition(currentState, nodes, currentState.player, x, y - 1, x, y - 2, Direction.UP, boxIndex, history);
-                testBoxAddPosition(currentState, nodes, currentState.player, x, y + 1, x, y + 2, Direction.DOWN, boxIndex, history);
-                testBoxAddPosition(currentState, nodes, currentState.player, x - 1, y, x - 2, y, Direction.LEFT, boxIndex, history);
-                testBoxAddPosition(currentState, nodes, currentState.player, x + 1, y, x + 2, y, Direction.RIGHT, boxIndex, history);
-
+                
+                //System.err.println("Box: " + box);//+ x + " " + y);
+                
+                testBoxAddPosition(currentState, nodes, currentState.player, x, y - 1, x, y - 2, Direction.UP, boxIndex);
+                testBoxAddPosition(currentState, nodes, currentState.player, x, y + 1, x, y + 2, Direction.DOWN, boxIndex);
+                testBoxAddPosition(currentState, nodes, currentState.player, x - 1, y, x - 2, y, Direction.LEFT, boxIndex);
+                testBoxAddPosition(currentState, nodes, currentState.player, x + 1, y, x + 2, y, Direction.RIGHT, boxIndex);
+                
                 boxIndex++;
             }
-
+            
         }
         return null;
     }
 
-    private static void testBoxAddPosition(State state, Queue<State> nodes, Position player, int boxX, int boxY, int boxX2, int boxY2, Direction move, int index, ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history)
+    private static void testBoxAddPosition(State state, Queue<State> nodes, Position player, int boxX, int boxY, int boxX2, int boxY2, Direction move, int index)
     {
+        //System.err.println(boxX2 + " " + boxY2);
+        //System.err.println(boxX + " " + boxY);
+        
         if (state.isFree(boxX, boxY) && state.isFree(boxX2, boxY2))
         {
+            //System.err.println("IS FREE");
+            //System.err.println(state.toString());
             Position boxPos = state.boxes.get(index);
+            //Check that the player can actually move into position to pull the box
+            //System.err.println(state.toString());
+            //System.err.println("Boxindex: " + index);
+            //System.err.println("BoxPos: " + boxPos);
+            //System.err.println("Player: " + player);
             Result result = Search.bfs(state, new IsAtPosition(move, boxPos.x, boxPos.y), player.x, player.y);
             if (result != null)
             {
@@ -282,7 +293,7 @@ public final class Search {
                 Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
 
-                if (!inHistory(possibleStep, history)){
+                if (!inHistory(possibleStep)){
                     nodes.add(possibleStep);
                 }
             }
@@ -307,7 +318,7 @@ public final class Search {
         }
     }
 
-    private static boolean inHistory(State state, ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history){
+    private static boolean inHistory(State state){
         Position p = state.player;
         int x = p.x;
         int y = p.y;
@@ -340,11 +351,11 @@ public final class Search {
             if(i == state.boxes.size())
                 return true;
         }
-        save(state, history);
+        save(state);
         return false;
     }
 
-    private static void save(State state, ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history){
+    private static void save(State state){
         Position p = state.player;
         int x = p.x;
         int y = p.y;
@@ -352,4 +363,6 @@ public final class Search {
         history.get(y).get(x).add(state.boxes);
     }
 
+    private static ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history;
+    
 }

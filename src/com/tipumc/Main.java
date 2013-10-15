@@ -26,8 +26,6 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, Exception {
 
-        int a = System.in.read();
-
         ArrayList<String> board = loadBoard("maps/all.slc00020.in");
 
         Map map = new Map(board);

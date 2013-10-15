@@ -77,22 +77,22 @@ public class State implements Comparable<State>{
     {
         Search.Result result;
         ArrayList<Position> positions = new ArrayList<Position>();
-        for(Position goal : this.goals){
-            result = Search.dfs(this, new IsAtPosition(goal.x+1,goal.y), this.player.x, this.player.y);
+        for(Position box : this.boxes){
+            result = Search.dfs(this, new IsAtPosition(box.x+1,box.y), this.player.x, this.player.y);
             if(result != null){
-                positions.add(new Position(goal.x+1,goal.y));
+                positions.add(new Position(box.x+1,box.y));
             }
-            result = Search.dfs(this, new IsAtPosition(goal.x-1,goal.y), this.player.x, this.player.y);
+            result = Search.dfs(this, new IsAtPosition(box.x-1,box.y), this.player.x, this.player.y);
             if(result != null){
-                positions.add(new Position(goal.x-1,goal.y));
+                positions.add(new Position(box.x-1,box.y));
             }
-            result = Search.dfs(this, new IsAtPosition(goal.x,goal.y+1), this.player.x, this.player.y);
+            result = Search.dfs(this, new IsAtPosition(box.x,box.y+1), this.player.x, this.player.y);
             if(result != null){
-                positions.add(new Position(goal.x,goal.y+1));
+                positions.add(new Position(box.x,box.y+1));
             }
-            result = Search.dfs(this, new IsAtPosition(goal.x,goal.y-1), this.player.x, this.player.y);
+            result = Search.dfs(this, new IsAtPosition(box.x,box.y-1), this.player.x, this.player.y);
             if(result != null){
-                positions.add(new Position(goal.x,goal.y-1));
+                positions.add(new Position(box.x,box.y-1));
             }
         }
         return positions;
@@ -234,10 +234,10 @@ public class State implements Comparable<State>{
         int compare2;
         int boxesOnGoal1 = this.boxesOnGoal();
         
-        if(boxesOnGoal1 > 0.5 * boxes.size()){
+        if(boxesOnGoal1 > 0.8 * boxes.size()){
             compare2 = boxesOnGoal1;
             compare1 = s.boxesOnGoal();
-            System.err.println("Changed");
+            //System.err.println("Changed");
         } else {
             compare1 = manhattanDistance(this);
             compare2 = manhattanDistance(s);
