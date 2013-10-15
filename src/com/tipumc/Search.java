@@ -151,7 +151,7 @@ public final class Search {
 
     private static void testAddPosition(State state, SearchTest test, Collection<Position> nodes, Direction[][] visitedPositions, int x, int y, Direction move)
     {
-        if (visitedPositions[x][y] == null & (state.isFree(x, y) | test.isEnd(state, x, y))){
+        if (visitedPositions[x][y] == null && (state.isFree(x, y) || test.isEnd(state, x, y))){
             Position possibleStep = new Position(x, y);
             visitedPositions[x][y] = move;
             nodes.add(possibleStep);
@@ -219,16 +219,13 @@ public final class Search {
         }
     }
 
-    public static State findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY, int boxIndex)
+    public static State findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY)
     {
         /* Create stack to store nodes */
         PriorityQueue<State> nodes = new PriorityQueue<State>();
         /* Create integers that is needed */
-        int width = state.getWidth();
         int height = state.getHeight();
         history = new ArrayList<ArrayList<ArrayList<ArrayList<Position>>>>(height);
-        /* Create 2D array to store visited positions */
-        Direction visitedPositions[][] = new Direction[width][height];
         /* Declare an positionobject to pop to from stack */
         State currentState = state;
         currentState.player = new Position(playerStartX, playerStartY);
@@ -245,11 +242,9 @@ public final class Search {
             if (test.isEnd(currentState, 0, 0)){
                 return currentState;
             }
-            boxIndex = 0;
-            
-            //System.err.println(currentState.toString());
 
             /* Create child nodes */
+            int boxIndex = 0;
             for (Position box : currentState.boxes)
             {
                 x = box.x;

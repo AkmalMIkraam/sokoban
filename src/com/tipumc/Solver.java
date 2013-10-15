@@ -14,11 +14,10 @@ public class Solver {
         int px = state.player.x;
         int py = state.player.y;
         ArrayList<Position> possiblePlayerPositions = possibleStartPositions(state);
-        int index = 0;
 
         for (Position player : possiblePlayerPositions)
         {
-            boxToGoal = Search.findBoxPath(state, isGoal, player.x, player.y, index);
+            boxToGoal = Search.findBoxPath(state, isGoal, player.x, player.y);
             if (boxToGoal != null){
                 Search.Result result = Search.bfs(boxToGoal, new IsAtPosition(px, py), boxToGoal.player.x, boxToGoal.player.y);
                 if(result != null){
