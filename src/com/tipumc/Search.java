@@ -54,6 +54,7 @@ public final class Search {
 
     public static Result bfs(State state, SearchTest test, int startX, int startY)
     {
+        if (test.isFree(state)){
         /* Create stack to store nodes */
         Queue<Position> nodes = new LinkedList<Position>();
         /* Create integers that is needed */
@@ -86,6 +87,7 @@ public final class Search {
             testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
             testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
             testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
+        }
         }
         return null;
     }
