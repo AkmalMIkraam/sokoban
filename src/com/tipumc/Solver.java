@@ -25,14 +25,17 @@ public class Solver {
             if (boxToGoal != null){
                 result = Search.bfs(boxToGoal, new IsAtPosition(px, py), boxToGoal.player.x, boxToGoal.player.y);
                 if(result != null){
-                    System.err.println(result.path);
+                    //System.err.println(result.path);
                     Collections.reverse(result.path);
                     toReturn = Search.getPlayerPath(boxToGoal);
                     toReturn.addAll(result.path);
                     Collections.reverse(toReturn);
                     return toReturn;
+                } else {
+                    System.err.println("No path back");
                 }
-                
+            } else{
+                System.err.println("No solution" + state.playerEndPos);
             }
             
         //    index++;

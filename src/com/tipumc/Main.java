@@ -26,7 +26,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, Exception {
 
-        Vector<String> board = loadBoard("maps/all.slc00020.in");
+        Vector<String> board = loadBoard("maps/all.slc00183.in");
 
         Map map = new Map(board);
         map.invert();
