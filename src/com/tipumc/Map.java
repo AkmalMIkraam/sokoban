@@ -60,8 +60,8 @@ public final class Map {
         }
     }
     
-    public void invert(){
-        startMap = inverseMap;
+    public static Map inverted(Map m){
+        return new Map(m.inverseMap);
     }
     
     public int getHeight()
@@ -75,7 +75,7 @@ public final class Map {
 
     public boolean isEmpty(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == ' ' | c == '@' | c == '.' | c =='*');
         
         
@@ -83,21 +83,19 @@ public final class Map {
 
     public boolean isWall(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == '#');
-        
-        
     }
 
     public boolean isGoal(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == '.');
     }
     
     public boolean isGoalOnBox(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == '*'); 
     }
 

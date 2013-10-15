@@ -31,9 +31,9 @@ public class Main {
         ArrayList<String> board = loadBoard("maps/all.slc00020.in");
 
         Map map = new Map(board);
-        map.invert();
+        Map invertMap = Map.inverted(map);
         System.err.println(map.toString());
-        State initialState = new State(map, map.inverseMap, board);
+        State initialState = new State(invertMap, map.inverseMap, board);
 
         Iterable<Direction> moves = Solver.solve(initialState);
         if (moves != null)
