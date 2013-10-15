@@ -47,7 +47,7 @@ public final class Map {
                 char c = startMap.get(i).charAt(j);
                 if (c=='$'){
                     stringLine += "."; 
-                }else if(c=='.'){
+                }else if(c=='.' | c=='+'){
                     stringLine += "$";
                 }
                 else{
@@ -56,6 +56,9 @@ public final class Map {
             }
             inverseMap.add(stringLine);   
         }
+    }
+    
+    public void invert(){
         startMap = inverseMap;
     }
     
@@ -71,7 +74,7 @@ public final class Map {
     public boolean isEmpty(int x, int y)
     {
         char c = startMap.get(y).charAt(x);
-        return (c == ' ' | c == '@');
+        return (c == ' ' | c == '@' | c == '.' | c =='*');
         
         
     }
