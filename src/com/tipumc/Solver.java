@@ -13,21 +13,18 @@ public class Solver {
         State boxToGoal;
         int px = state.player.x;
         int py = state.player.y;
-        Search.Result result = new Search.Result();
         ArrayList<Position> possiblePlayerPositions = possibleStartPositions(state);
         int index = 0;
-        ArrayList<Direction> toReturn = new ArrayList<Direction>();
 
         for (Position player : possiblePlayerPositions)
         {
             boxToGoal = Search.findBoxPath(state, isGoal, player.x, player.y, index);
-            //System.err.println("Player: " + px + " " + py);
             if (boxToGoal != null){
-                result = Search.bfs(boxToGoal, new IsAtPosition(px, py), boxToGoal.player.x, boxToGoal.player.y);
+                Search.Result result = Search.bfs(boxToGoal, new IsAtPosition(px, py), boxToGoal.player.x, boxToGoal.player.y);
                 if(result != null){
                     //System.err.println(result.path);
                     Collections.reverse(result.path);
-                    toReturn = Search.getPlayerPath(boxToGoal);
+                    ArrayList<Direction> toReturn = Search.getPlayerPath(boxToGoal);
                     toReturn.addAll(result.path);
                     Collections.reverse(toReturn);
                     return toReturn;
@@ -44,7 +41,12 @@ public class Solver {
         System.exit(0);
         return null;
     }
-    
+
+    /**
+     * Since the game is played in reverse
+     * @param state
+     * @return
+     */
     private static ArrayList<Position> possibleStartPositions(State state){
         ArrayList<Position> positions = new ArrayList<Position>();
         

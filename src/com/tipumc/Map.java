@@ -1,12 +1,13 @@
 package com.tipumc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
 public final class Map {
 
 
-    public Map(Vector<String> map)
+    public Map(ArrayList<String> map)
     {
         startMap = map;
         height = map.size();
@@ -40,26 +41,27 @@ public final class Map {
         }
         
 
-         inverseMap = new Vector<String>();
-          for (int i = 0; i < map.size(); i++) {
-              String stringLine = new String();
+        inverseMap = new ArrayList<String>();
+        for (int i = 0; i < map.size(); i++) {
+            String stringLine = new String();
             for (int j = 0; j < map.get(i).length(); j++) {
                 char c = startMap.get(i).charAt(j);
                 if (c=='$'){
-                    stringLine += "."; 
-                }else if(c=='.' | c=='+'){
+                    stringLine += ".";
+                }
+                else if(c=='.' | c=='+'){
                     stringLine += "$";
                 }
                 else{
                     stringLine += c;
                 }
             }
-            inverseMap.add(stringLine);   
+            inverseMap.add(stringLine);
         }
     }
     
-    public void invert(){
-        startMap = inverseMap;
+    public static Map inverted(Map m){
+        return new Map(m.inverseMap);
     }
     
     public int getHeight()
@@ -73,7 +75,7 @@ public final class Map {
 
     public boolean isEmpty(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == ' ' | c == '@' | c == '.' | c =='*');
         
         
@@ -81,21 +83,19 @@ public final class Map {
 
     public boolean isWall(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == '#');
-        
-        
     }
 
     public boolean isGoal(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == '.');
     }
     
     public boolean isGoalOnBox(int x, int y)
     {
-        char c = startMap.get(y).charAt(x);
+        char c = mapMatrix[y][x];
         return (c == '*'); 
     }
 
@@ -118,8 +118,8 @@ public final class Map {
     
     
     public char[][] mapMatrix;
-    private Vector<String> startMap;
-    public Vector<String> inverseMap;
+    private ArrayList<String> startMap;
+    public ArrayList<String> inverseMap;
     private int height;
     private int width;
 }

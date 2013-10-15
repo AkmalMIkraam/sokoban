@@ -1,13 +1,13 @@
 package com.tipumc;
 import java.io.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 
 public class Main {
 
-    public static Vector<String> loadBoard(String filename) throws IOException
+    public static ArrayList<String> loadBoard(String filename) throws IOException
     {
-        Vector<String> board = new Vector<String>();
+        ArrayList<String> board = new ArrayList<String>();
 
         BufferedReader br = new BufferedReader(new FileReader(filename));
         //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,12 +26,12 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, Exception {
 
-        Vector<String> board = loadBoard("maps/all.slc00183.in");
+        ArrayList<String> board = loadBoard("maps/all.slc00020.in");
 
         Map map = new Map(board);
-        map.invert();
+        Map invertMap = Map.inverted(map);
         System.err.println(map.toString());
-        State initialState = new State(map, map.inverseMap, board);
+        State initialState = new State(invertMap, map.inverseMap, board);
 
         Iterable<Direction> moves = Solver.solve(initialState);
         if (moves != null)
