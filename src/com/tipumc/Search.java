@@ -158,54 +158,22 @@ public final class Search {
         }
     }
 
-    public static ArrayList<Position> findAllReachableGoals(State state, int boxIndex)
-    {
-        /* Create stack to store no        des */
-        Queue<State> nodes = new LinkedList<State>();
-        /* Create integers that is needed */
-        int width = state.getWidth();
-        int height = state.getHeight();
-        /* Create 2D array to store visited positions */
-        Direction visitedPositions[][] = new Direction[width][height];
-        /* Declare an positionobject to pop to from stack */
-        State currentState = state;
-        ArrayList<Position> result = new ArrayList<Position>();
-
-        /* Push the start position node, for the search on the stack */
-        nodes.add(currentState);
-
-        /* Search for a path to the wanted goal */
-        while (!nodes.isEmpty()){
-            currentState = nodes.remove();
-            Position boxPosition = currentState.boxes.get(boxIndex);
-            int x = boxPosition.x;
-            int y = boxPosition.y;
-
-            if (Solver.isGoal.isEnd(state, x, y)){
-                result.add(new Position(x, y));
-            }
-
-            /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, 0, -1, Direction.UP, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, 0, 1, Direction.DOWN, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, -1, 0, Direction.LEFT, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, 1, 0, Direction.RIGHT, boxIndex);
-        }
-        return result;
-    }
 
     public static State findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY, int boxIndex)
     {
         /* Create stack to store nodes */
-        Queue<State> nodes = new LinkedList<State>();
+        PriorityQueue<State> nodes = new PriorityQueue<State>();
         /* Create integers that is needed */
         int width = state.getWidth();
         int height = state.getHeight();
+        ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history;
+        history = new ArrayList<ArrayList<ArrayList<ArrayList<Position>>>>(height);
         /* Create 2D array to store visited positions */
         Direction visitedPositions[][] = new Direction[width][height];
         /* Declare an positionobject to pop to from stack */
         State currentState = state;
         currentState.player = new Position(playerStartX, playerStartY);
+        int x /*= currentPosition.x*/, y /*= currentPosition.y*/;
 
         /* Push the start position node, for the search on the stack */
         nodes.add(currentState);
@@ -213,43 +181,66 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
             currentState = nodes.remove();
-            Position boxPosition = currentState.boxes.get(boxIndex);
-            int x = boxPosition.x;
-            int y = boxPosition.y;
+            
 
-            if (test.isEnd(state, x, y)){
+            if (test.isEnd(currentState, 0, 0)){
                 return currentState;
             }
+            boxIndex = 0;
+            
+            System.err.println(currentState.toString());
 
             /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, 0, -1, Direction.UP, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, 0, 1, Direction.DOWN, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, -1, 0, Direction.LEFT, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, 1, 0, Direction.RIGHT, boxIndex);
+            for (Position box : currentState.boxes)
+            {
+                x = box.x;
+                y = box.y;
+                
+                //System.err.println("Box: " + box);//+ x + " " + y);
+                
+                testBoxAddPosition(currentState, nodes, currentState.player, x, y - 1, x, y - 2, Direction.UP, boxIndex, history);
+                testBoxAddPosition(currentState, nodes, currentState.player, x, y + 1, x, y + 2, Direction.DOWN, boxIndex, history);
+                testBoxAddPosition(currentState, nodes, currentState.player, x - 1, y, x - 2, y, Direction.LEFT, boxIndex, history);
+                testBoxAddPosition(currentState, nodes, currentState.player, x + 1, y, x + 2, y, Direction.RIGHT, boxIndex, history);
+                
+                boxIndex++;
+            }
+            
         }
-        System.err.println("no path");
         return null;
     }
 
-    private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, int dirX, int dirY, Direction move, int index)
+    private static void testBoxAddPosition(State state, Queue<State> nodes, Position player, int boxX, int boxY, int boxX2, int boxY2, Direction move, int index, ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history)
     {
-        Position currentBoxPos =  state.boxes.get(index);
-        int boxX = currentBoxPos.x + dirX;
-        int boxY = currentBoxPos.y + dirY;
-        Position player = state.getPlayer();
-        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY))
+        //System.err.println(boxX2 + " " + boxY2);
+        //System.err.println(boxX + " " + boxY);
+        
+        if (state.isFree(boxX, boxY) && state.isFree(boxX2, boxY2))
         {
-            //Check that the player can actually move into position to push the box
-            Result result = Search.bfs(state, new IsAtPosition(move, currentBoxPos.x - dirX, currentBoxPos.y - dirY), player.x, player.y);
+            //System.err.println("IS FREE");
+            //System.err.println(state.toString());
+            Position boxPos = state.boxes.get(index);
+            //Check that the player can actually move into position to pull the box
+            //System.err.println(state.toString());
+            //System.err.println("Boxindex: " + index);
+            //System.err.println("BoxPos: " + boxPos);
+            //System.err.println("Player: " + player);
+            //System.err.println("Move: " + move);
+            Result result = Search.bfs(state, new IsAtPosition(move, boxPos.x, boxPos.y), player.x, player.y);
             if (result != null)
             {
+                
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
                 boxes.set(index, new Position(boxX, boxY));
-                State possibleStep = new State(state.map, new Position(currentBoxPos.x, currentBoxPos.y), boxes, result.path, state);
+                State possibleStep = new State(state.map, new Position(boxX2, boxY2), boxes, result.path, state, state.goals, state.playerEndPos);
                 Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
-                visitedPositions[boxX][boxY] = move;
-                nodes.add(possibleStep);
+                //visitedPositions[boxX][boxY] = move;
+                
+                if (!inHistory(possibleStep, history)){
+                    nodes.add(possibleStep);
+                    //System.err.println(possibleStep.toString());
+                }
             }
         }
     }
@@ -260,7 +251,8 @@ public final class Search {
         } else {
             ArrayList<Direction> tempPath = getPlayerPath(current.parent);
             if (tempPath == null){
-                tempPath = new ArrayList<Direction>(current.playerPath);
+                tempPath = new ArrayList<Direction>();
+                tempPath.add(current.playerPath.get(current.playerPath.size()-1));
                 //Collections.reverse(tempPath);
             } else {
                 tempPath.addAll(current.playerPath);
@@ -272,4 +264,50 @@ public final class Search {
         }
         
     }
+    
+    private static boolean inHistory(State state, ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history){
+        Position p = state.player;
+        int x = p.x;
+        int y = p.y;
+        
+        //System.err.println("Player: " + x + " " + y);
+        
+        try {
+            history.get(y);
+        } catch (IndexOutOfBoundsException e){
+            for(int i = history.size(); i <= y; i++)
+                history.add(i, new ArrayList<ArrayList<ArrayList<Position>>>());
+        }
+        
+        try {
+            history.get(y).get(x);
+        } catch(IndexOutOfBoundsException e){
+            for(int i = history.get(y).size(); i <= x; i++)
+                history.get(y).add(i, new ArrayList<ArrayList<Position>>());
+        }
+        
+        for(ArrayList<Position> boxes : history.get(y).get(x)){
+            int i = 0;
+            for(Position box1 : boxes){
+                for(Position box2 : state.boxes){
+                    if(box1.equals(box2)){
+                        i++;
+                    }
+                }
+            }
+            if(i == state.boxes.size())
+                return true;
+        }
+        save(state, history);
+        return false;
+    }
+    
+    private static void save(State state, ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history){
+        Position p = state.player;
+        int x = p.x;
+        int y = p.y;
+        
+        history.get(y).get(x).add(state.boxes);
+    }
+    
 }

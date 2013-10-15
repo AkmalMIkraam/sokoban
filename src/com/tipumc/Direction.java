@@ -31,13 +31,13 @@ public enum Direction {
         switch (this)
         {
             case LEFT:
-                return "L";
-            case RIGHT:
                 return "R";
+            case RIGHT:
+                return "L";
             case UP:
-                return "U";
-            case DOWN:
                 return "D";
+            case DOWN:
+                return "U";
             default:
                 return null;
         }

@@ -26,11 +26,12 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, Exception {
 
-        Vector<String> board = loadBoard("maps/test.in");
+        Vector<String> board = loadBoard("maps/all.slc00020.in");
 
         Map map = new Map(board);
+        map.invert();
         System.err.println(map.toString());
-        State initialState = new State(map, board);
+        State initialState = new State(map, map.inverseMap, board);
 
         Iterable<Direction> moves = Solver.solve(initialState);
         if (moves != null)
