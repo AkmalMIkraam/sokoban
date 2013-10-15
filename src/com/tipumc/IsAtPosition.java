@@ -9,8 +9,8 @@ public class IsAtPosition implements SearchTest {
     public IsAtPosition(Direction direction, int x, int y)
     {
         direction.getDirection(position);
-        position.x = x - position.x;
-        position.y = y - position.y;
+        position.x = x + position.x;
+        position.y = y + position.y;
     }
 
     public IsAtPosition(int x, int y)

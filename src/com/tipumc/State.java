@@ -5,23 +5,29 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class State {
+public class State implements Comparable<State>{
 
-    public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent)//More parameters for player and boxes
+    public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent, ArrayList<Position> goals, ArrayList<Position> playerEndPos)//More parameters for player and boxes
     {
         this.map = map;
         this.player = player;
         this.boxes = boxes;
         this.playerPath = playerPath;
         this.parent = parent;
+        this.goals = goals;
+        this.playerEndPos = playerEndPos;
     }
 
-    public State(Map map, Vector<String> board) throws Exception
+    public State(Map map, Vector<String> boardinv, Vector<String> board) throws Exception
     {
         this.map = map;
         //Read in the initial position of the boxes and the player.
         this.player = findPlayer(board);
         this.boxes = findBoxes(board);
+        this.goals = findGoals(board);
+        this.playerEndPos = findPlayerEndPos();
+        this.boxes = findBoxes(boardinv);
+        this.goals = findGoals(boardinv);
     }
 
     private Position findPlayer(Vector<String> board) throws Exception
@@ -52,6 +58,74 @@ public class State {
         }
         return boxes;
     }
+    
+    private ArrayList<Position> findGoals(Vector<String> board)
+    {
+        ArrayList<Position> goals = new ArrayList<Position>();
+        for (int y = 0; y < board.size(); ++y)
+        {
+            for (int x = 0; x < board.get(y).length(); ++x)
+            {
+                char c = board.get(y).charAt(x);
+                if (c == '.' | c == '*' | c == '+')
+                    goals.add(new Position(x, y));
+            }
+        }
+        return goals;
+    }
+    
+    private ArrayList<Position> findPlayerEndPos()
+    {
+        Search.Result result;
+        ArrayList<Position> positions = new ArrayList<Position>();
+        for(Position box : this.boxes){
+            result = Search.dfs(this, new IsAtPosition(box.x+1,box.y), this.player.x, this.player.y);
+            if(result != null){
+                positions.add(new Position(box.x+1,box.y));
+            }
+            result = Search.dfs(this, new IsAtPosition(box.x-1,box.y), this.player.x, this.player.y);
+            if(result != null){
+                positions.add(new Position(box.x-1,box.y));
+            }
+            result = Search.dfs(this, new IsAtPosition(box.x,box.y+1), this.player.x, this.player.y);
+            if(result != null){
+                positions.add(new Position(box.x,box.y+1));
+            }
+            result = Search.dfs(this, new IsAtPosition(box.x,box.y-1), this.player.x, this.player.y);
+            if(result != null){
+                positions.add(new Position(box.x,box.y-1));
+            }
+        }
+        return positions;
+    }
+    
+    public boolean isFinal(){
+        int numOfBoxOnGoal = boxesOnGoal();
+        return(numOfBoxOnGoal == goals.size() && isAtPossibleEndPosition());
+    }
+    
+    private int boxesOnGoal(){
+        int numOfBoxOnGoal = 0;
+        for (Position boxPos : boxes){
+            for(Position goalPos : goals){
+                //System.err.println(goalPos + " " + boxPos);
+                if(boxPos.equals(goalPos)){
+                    numOfBoxOnGoal++;
+                }
+            }
+        }
+        return numOfBoxOnGoal;
+    }
+    
+    private boolean isAtPossibleEndPosition(){
+        for (Position pos : playerEndPos)
+        {
+            //System.err.println("Boxes: " + pos);
+            if (player.x == pos.x & player.y == pos.y)
+                return true;
+        }
+        return false;
+    }
 
     
     public int getHeight()
@@ -72,7 +146,7 @@ public class State {
      */
     public boolean isFree(int x, int y)
     {
-        return ((this.map.isEmpty(x, y)|this.map.isGoal(x, y)) & !this.isBox(x, y));
+        return (!this.isWall(x, y) && !this.isBox(x, y));
     }
 
     /*
@@ -82,6 +156,7 @@ public class State {
     {
         for (Position pos : boxes)
         {
+            //System.err.println("Boxes: " + pos);
             if (x == pos.x & y == pos.y)
                 return true;
         }
@@ -94,7 +169,12 @@ public class State {
 
     public boolean isGoal(int x, int y)
     {
-        return map.isGoal(x, y);
+        for (Position pos : goals)
+        {
+            if (x == pos.x & y == pos.y)
+                return true;
+        }
+        return false;
     }
 
     public boolean isWall(int x, int y)
@@ -148,11 +228,58 @@ public class State {
         }
         return stringOut;
     }
+    
+    public int compareTo(State s){
+        
+        int compare1;
+        int compare2;
+        int boxesOnGoal1 = this.boxesOnGoal();
+        
+        if(boxesOnGoal1 > 0.8 * boxes.size()){
+            compare2 = boxesOnGoal1;
+            compare1 = s.boxesOnGoal();
+            //System.err.println("Changed");
+        } else {
+            compare1 = manhattanDistance(this);
+            compare2 = manhattanDistance(s);
+        }
+        
+        if(compare1 < compare2){
+            return -1;
+        }
+        else if(compare2 < compare1){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    
+    private int manhattanDistance(State s){
+        int distance = 0;
+        int totalDistance = 0;
+        for(Position box : s.boxes){
+            int min = 10000;
+            for(Position goal : s.goals){
+                distance = Math.abs(goal.x-box.x) + Math.abs(goal.y-box.y);
+                if (distance < min){
+                    min = distance;
+                }
+            }
+            totalDistance += min;
+        }
+        return totalDistance;
+    }
+    
+    /*private static boolean isInTunnel(Position box){
+        return ((this.isWall(box.x+1,box.y) && this.isWall(box.x-1,box.y)) | (this.isWall(box.x,box.y+1) && this.isWall(box.x,box.y-1)));
+    }*/
 
     /**
      * We don't necessarily have to store objects like this but it would work as a start.
      */
     public ArrayList<Position> boxes;
+    public ArrayList<Position> goals;
+    public ArrayList<Position> playerEndPos;
     public Position player;
     public Map map;
     public ArrayList<Direction> playerPath;
