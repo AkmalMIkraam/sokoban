@@ -63,7 +63,6 @@ public final class Search {
         Direction visitedPositions[][] = new Direction[width][height];
         /* Declare an positionobject to pop to from stack */
         Position currentPosition = new Position(startX, startY);
-        int x = currentPosition.x, y = currentPosition.y;
 
         /* Push the start position node, for the search on the stack */
         nodes.add(currentPosition);
@@ -71,8 +70,8 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
             currentPosition = nodes.remove();
-            x = currentPosition.x;
-            y = currentPosition.y;
+            int x = currentPosition.x;
+            int y = currentPosition.y;
 
             if (test.isEnd(state, currentPosition.x, currentPosition.y)){
                 Result result = new Result();
@@ -229,7 +228,6 @@ public final class Search {
         /* Declare an positionobject to pop to from stack */
         State currentState = state;
         currentState.player = new Position(playerStartX, playerStartY);
-        int x /*= currentPosition.x*/, y /*= currentPosition.y*/;
 
         /* Push the start position node, for the search on the stack */
         nodes.add(currentState);
@@ -247,8 +245,8 @@ public final class Search {
             int boxIndex = 0;
             for (Position box : currentState.boxes)
             {
-                x = box.x;
-                y = box.y;
+                int x = box.x;
+                int y = box.y;
                 
                 //System.err.println("Box: " + box);//+ x + " " + y);
                 

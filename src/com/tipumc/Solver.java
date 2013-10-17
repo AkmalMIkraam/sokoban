@@ -21,7 +21,6 @@ public class Solver {
             if (boxToGoal != null){
                 Search.Result result = Search.bfs(boxToGoal, new IsAtPosition(px, py), boxToGoal.player.x, boxToGoal.player.y);
                 if(result != null){
-                    //System.err.println(result.path);
                     Collections.reverse(result.path);
                     ArrayList<Direction> toReturn = Search.getPlayerPath(boxToGoal);
                     toReturn.addAll(result.path);
@@ -33,8 +32,6 @@ public class Solver {
             } else{
                 System.err.println("No solution" + state.playerEndPos);
             }
-            
-        //    index++;
         }
         System.err.println("no path");
         System.exit(0);
