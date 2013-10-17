@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class State implements Comparable<State>{
+public final class State implements Comparable<State>{
 
     public State(Map map, Position player, ArrayList<Position> boxes, ArrayList<Direction> playerPath, State parent)//More parameters for player and boxes
     {
@@ -151,9 +151,9 @@ public class State implements Comparable<State>{
      */
     public boolean isBox(int x, int y)
     {
-        for (Position pos : boxes)
+        for (int ii = 0; ii < boxes.size(); ++ii)
         {
-            //System.err.println("Boxes: " + pos);
+            Position pos = boxes.get(ii);
             if (x == pos.x & y == pos.y)
                 return true;
         }

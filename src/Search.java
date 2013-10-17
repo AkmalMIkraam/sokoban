@@ -90,7 +90,7 @@ public final class Search {
     {
         if (test.isFree(state)){
             /* Create stack to store nodes */
-            Queue<Position> nodes = new LinkedList<Position>();
+            ArrayDeque<Position> nodes = new ArrayDeque<Position>();
             /* Create integers that is needed */
             int width = state.getWidth();
             int height = state.getHeight();
@@ -113,10 +113,10 @@ public final class Search {
                 }
 
                 /* Create child nodes */
-                testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
-                testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
-                testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
-                testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
+                testAddPosition(state, test, nodes, visitedPositions, x, y - 1, Direction.UP);
+                testAddPosition(state, test, nodes, visitedPositions, x, y + 1, Direction.DOWN);
+                testAddPosition(state, test, nodes, visitedPositions, x - 1, y, Direction.LEFT);
+                testAddPosition(state, test, nodes, visitedPositions, x + 1, y, Direction.RIGHT);
             }
         }
         return null;
@@ -260,7 +260,7 @@ public final class Search {
         if (maybePlayerPositions != null)
         {
             for(Position otherPlayer : maybePlayerPositions){
-                Result same = Search.dfs(state, new IsAtPosition(otherPlayer.x, otherPlayer.y), x, y);
+                Result same = Search.bfs(state, new IsAtPosition(otherPlayer.x, otherPlayer.y), x, y);
                 if (same != null)
                     return true;
             }
