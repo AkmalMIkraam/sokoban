@@ -9,7 +9,6 @@ public final class Search {
     {
         public Position endPosition;
         public ArrayList<Direction> path;
-        public State state;
     }
 
     public static Result dfs(State state, SearchTest test, int startX, int startY)
@@ -23,7 +22,6 @@ public final class Search {
         Direction visitedPositions[][] = new Direction[width][height];
         /* Declare an positionobject to pop to from stack */
         Position currentPosition = new Position(startX, startY);
-        int x = currentPosition.x, y = currentPosition.y;
 
         /* Push the start position node, for the search on the stack */
         nodes.push(currentPosition);
@@ -31,8 +29,8 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.empty()){
             currentPosition = nodes.pop();
-            x = currentPosition.x;
-            y = currentPosition.y;
+            int x = currentPosition.x;
+            int y = currentPosition.y;
 
             if (test.isEnd(state, currentPosition.x, currentPosition.y)){
                 Result result = new Result();
@@ -232,27 +230,23 @@ public final class Search {
         /* Search for a path to the wanted goal */
         while (!nodes.isEmpty()){
             currentState = nodes.remove();
-            
 
             if (test.isEnd(currentState, 0, 0)){
                 return currentState;
             }
 
             /* Create child nodes */
-            int boxIndex = 0;
-            for (Position box : currentState.boxes)
+            for (int boxIndex = 0;  boxIndex < currentState.boxes.size(); ++boxIndex)
             {
+                Position box = currentState.boxes.get(boxIndex);
                 int x = box.x;
                 int y = box.y;
-                
-                //System.err.println("Box: " + box);//+ x + " " + y);
-                
+
                 testBoxAddPosition(currentState, nodes, currentState.player, x, y - 1, x, y - 2, Direction.UP, boxIndex);
                 testBoxAddPosition(currentState, nodes, currentState.player, x, y + 1, x, y + 2, Direction.DOWN, boxIndex);
                 testBoxAddPosition(currentState, nodes, currentState.player, x - 1, y, x - 2, y, Direction.LEFT, boxIndex);
                 testBoxAddPosition(currentState, nodes, currentState.player, x + 1, y, x + 2, y, Direction.RIGHT, boxIndex);
-                
-                boxIndex++;
+
             }
             
         }
@@ -274,19 +268,9 @@ public final class Search {
 
     private static void testBoxAddPosition(State state, Queue<State> nodes, Position player, int boxX, int boxY, int boxX2, int boxY2, Direction move, int index)
     {
-        //System.err.println(boxX2 + " " + boxY2);
-        //System.err.println(boxX + " " + boxY);
-        
         if (state.isFree(boxX, boxY) && state.isFree(boxX2, boxY2))
         {
-            //System.err.println("IS FREE");
-            //System.err.println(state.toString());
             Position boxPos = state.boxes.get(index);
-            //Check that the player can actually move into position to pull the box
-            //System.err.println(state.toString());
-            //System.err.println("Boxindex: " + index);
-            //System.err.println("BoxPos: " + boxPos);
-            //System.err.println("Player: " + player);
             Result result = Search.bfs(state, new IsAtPosition(move, boxPos.x, boxPos.y), player.x, player.y);
             if (result != null)
             {
@@ -318,9 +302,6 @@ public final class Search {
             } else {
                 tempPath.addAll(current.playerPath);
             }
-            //System.err.println(current.toString());
-            //System.err.println("playerPath : " + current.playerPath);
-            //System.err.println("BoxPosition: " + current.boxes.get(0).x + " " + current.boxes.get(0).y);
             return tempPath;
         }
     }
@@ -330,7 +311,6 @@ public final class Search {
         int x = p.x;
         int y = p.y;
 
-        //System.err.println("Player: " + x + " " + y);
         ArrayList<Position> maybePlayerPositions =  history.get(state.boxes);
         if (maybePlayerPositions != null)
         {
