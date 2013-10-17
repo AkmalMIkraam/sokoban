@@ -1,4 +1,3 @@
-package com.tipumc;
 import java.io.*;
 import java.util.ArrayList;
 

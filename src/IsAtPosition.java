@@ -1,5 +1,3 @@
-package com.tipumc;
-
 public class IsAtPosition implements SearchTest {
 
     /**

@@ -1,5 +1,3 @@
-package com.tipumc;
-
 public final class Position {
     public Position()
     {

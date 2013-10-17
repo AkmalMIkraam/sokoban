@@ -1,8 +1,5 @@
-package com.tipumc;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
 
 public final class Map {
 
