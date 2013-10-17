@@ -48,44 +48,6 @@ public final class Search {
         return null;
     }
 
-    private static class VisitedNodes
-    {
-        public VisitedNodes(int width, int height)
-        {
-            directions = new Direction[width][height];
-            tokens = new int[width][height];
-        }
-
-        public Direction get(int x, int y)
-        {
-            if (tokens[x][y] != currentToken)
-            {
-                return null;
-            }
-            return directions[x][y];
-        }
-
-        public void set(int x, int y, Direction dir)
-        {
-            tokens[x][y] = currentToken;
-            directions[x][y] = dir;
-        }
-
-        static VisitedNodes createArray(int width, int height)
-        {
-            if (visitedNodes == null)
-            {
-                visitedNodes = new VisitedNodes(width, height);
-            }
-            visitedNodes.currentToken++;
-            return visitedNodes;
-        }
-        private static VisitedNodes visitedNodes;
-
-        public Direction[][] directions;
-        private int tokens[][];
-        private int currentToken;
-    }
     public static Result bfs(State state, SearchTest test, int startX, int startY)
     {
         if (test.isFree(state)){
@@ -133,21 +95,16 @@ public final class Search {
     private static ArrayList<Direction> getPath(Direction[][] moves, int fromX, int fromY, int toX, int toY)
     {
         int x = fromX, y = fromY;
-        //System.err.println(toX + " TO " + toY);
-        //System.err.println(fromX + " FROM " + fromY);
         ArrayList<Direction> path = new ArrayList<Direction>();
         Position dir = new Position();
         while ((y != toY) | (x != toX) )
         {
-            //System.err.println(x + " B " + y);
-
             Direction move = moves[x][y];
             path.add(move);
 
             move.getDirection(dir);
             x -= dir.x;
             y -= dir.y;
-            //System.err.println(x + " A " + y);
         }
         return path;
     }
