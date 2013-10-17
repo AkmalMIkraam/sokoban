@@ -8,7 +8,6 @@ public class Main {
     {
         ArrayList<String> board = new ArrayList<String>();
 
-        //BufferedReader br = new BufferedReader(new FileReader(filename));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String line;
@@ -16,6 +15,16 @@ public class Main {
             line = br.readLine();
             board.add(line);
         } // End while
+
+        if (board.isEmpty())
+        {
+            br = new BufferedReader(new FileReader(filename));
+
+            while(br.ready()) {
+                line = br.readLine();
+                board.add(line);
+            } // End while
+        }
 
         return board;
     }
