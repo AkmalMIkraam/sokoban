@@ -10,4 +10,6 @@ public interface SearchTest {
      * @return True if the tile is the searched for tile
      */
     public boolean isEnd(State state, int x, int y);
+    
+    public boolean isFree(State state);
 }

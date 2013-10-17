@@ -23,6 +23,10 @@ public class IsAtPosition implements SearchTest {
     public boolean isEnd(State state, int x, int y) {
         return x == position.x && y == position.y;
     }
+    
+    public boolean isFree(State state){
+        return (!state.isWall(position.x, position.y) && !state.isBox(position.x, position.y));
+    }
 
     Position position = new Position();
 }

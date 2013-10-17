@@ -9,8 +9,8 @@ public class Main {
     {
         ArrayList<String> board = new ArrayList<String>();
 
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        //BufferedReader br = new BufferedReader(new FileReader(filename));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String line;
         while(br.ready()) {
@@ -26,7 +26,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, Exception {
 
-        ArrayList<String> board = loadBoard("maps/all.slc00020.in");
+        ArrayList<String> board = loadBoard("maps/all.slc00100.in");
 
         Map map = new Map(board);
         Map invertMap = Map.inverted(map);
