@@ -11,6 +11,7 @@ public class State implements Comparable<State>{
         this.parent = parent;
         this.goals = parent.goals;
         this.playerEndPos = parent.playerEndPos;
+        cacheManhattanDistance();
     }
 
     public State(Map map, ArrayList<String> boardinv, ArrayList<String> board) throws Exception
@@ -23,6 +24,7 @@ public class State implements Comparable<State>{
         this.playerEndPos = findPlayerEndPos();
         this.boxes = findBoxes(boardinv);
         this.goals = findGoals(boardinv);
+        cacheManhattanDistance();
     }
 
     private Position findPlayer(ArrayList<String> board) throws Exception
@@ -235,8 +237,8 @@ public class State implements Comparable<State>{
             compare1 = s.boxesOnGoal();
             //System.err.println("Changed");
         } else {
-            compare1 = manhattanDistance(this);
-            compare2 = manhattanDistance(s);
+            compare1 = this.manhattanDistance;
+            compare2 = s.manhattanDistance;
         }
         
         if(compare1 < compare2){
@@ -248,20 +250,20 @@ public class State implements Comparable<State>{
             return 0;
         }
     }
-    
-    private int manhattanDistance(State s){
-        int totalDistance = 0;
-        for(Position box : s.boxes){
+
+    private int manhattanDistance;
+    private void cacheManhattanDistance(){
+
+        for(Position box : boxes){
             int min = 10000;
-            for(Position goal : s.goals){
+            for(Position goal : goals){
                 int distance = Math.abs(goal.x-box.x) + Math.abs(goal.y-box.y);
                 if (distance < min){
                     min = distance;
                 }
             }
-            totalDistance += min;
+            manhattanDistance += min;
         }
-        return totalDistance;
     }
     
     /*private static boolean isInTunnel(Position box){
