@@ -1,3 +1,5 @@
+
+
 import java.util.*;
 
 
@@ -220,9 +222,6 @@ public final class Search {
     {
         /* Create stack to store nodes */
         PriorityQueue<State> nodes = new PriorityQueue<State>();
-        /* Create integers that is needed */
-        int height = state.getHeight();
-        history = new ArrayList<ArrayList<ArrayList<ArrayList<Position>>>>(height);
         /* Declare an positionobject to pop to from stack */
         State currentState = state;
         currentState.player = new Position(playerStartX, playerStartY);
@@ -260,6 +259,19 @@ public final class Search {
         return null;
     }
 
+    private static final Comparator<Position> compareX = new Comparator<Position>() {
+        @Override
+        public int compare(Position o1, Position o2) {
+            return o1.x < o2.x ? -1 : 1;
+        }
+    };
+    private static final Comparator<Position> compareY = new Comparator<Position>() {
+        @Override
+        public int compare(Position o1, Position o2) {
+            return o1.y < o2.y ? -1 : 1;
+        }
+    };
+
     private static void testBoxAddPosition(State state, Queue<State> nodes, Position player, int boxX, int boxY, int boxX2, int boxY2, Direction move, int index)
     {
         //System.err.println(boxX2 + " " + boxY2);
@@ -280,6 +292,10 @@ public final class Search {
             {
                 ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
                 boxes.set(index, new Position(boxX, boxY));
+                // Sort the boxes with a stable sort since we want that two configurations of boxes which are permutations
+                // of each other are equal
+                Collections.sort(boxes, compareX);
+                Collections.sort(boxes, compareY);
                 State possibleStep = new State(state.map, new Position(boxX2, boxY2), boxes, result.path, state);
                 Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
@@ -315,45 +331,25 @@ public final class Search {
         int y = p.y;
 
         //System.err.println("Player: " + x + " " + y);
-
-        try {
-            history.get(y);
-        } catch (IndexOutOfBoundsException e){
-            for(int i = history.size(); i <= y; i++)
-                history.add(i, new ArrayList<ArrayList<ArrayList<Position>>>());
-        }
-
-        try {
-            history.get(y).get(x);
-        } catch(IndexOutOfBoundsException e){
-            for(int i = history.get(y).size(); i <= x; i++)
-                history.get(y).add(i, new ArrayList<ArrayList<Position>>());
-        }
-
-        for(ArrayList<Position> boxes : history.get(y).get(x)){
-            int i = 0;
-            for(Position box1 : boxes){
-                for(Position box2 : state.boxes){
-                    if(box1.equals(box2)){
-                        i++;
-                    }
-                }
+        ArrayList<Position> maybePlayerPositions =  history.get(state.boxes);
+        if (maybePlayerPositions != null)
+        {
+            for(Position otherPlayer : maybePlayerPositions){
+                Result same = Search.dfs(state, new IsAtPosition(otherPlayer.x, otherPlayer.y), x, y);
+                if (same != null)
+                    return true;
             }
-            if(i == state.boxes.size())
-                return true;
+            maybePlayerPositions.add(state.getPlayer());
+            return false;
         }
-        save(state);
+        ArrayList<Position> s = new ArrayList<Position>();
+        s.add(state.getPlayer());
+        history.put(state.boxes, s);
         return false;
     }
 
-    private static void save(State state){
-        Position p = state.player;
-        int x = p.x;
-        int y = p.y;
-
-        history.get(y).get(x).add(state.boxes);
-    }
-
-    private static ArrayList<ArrayList<ArrayList<ArrayList<Position>>>> history;
+    //Map which stores all player positions which has been observed for a specific box configuration
+    //The boxes are sorted first on the x-axis and then on they y-axis with a stable sort so that it can be used as a key
+    private static HashMap<ArrayList<Position>, ArrayList<Position>> history = new HashMap<ArrayList<Position>, ArrayList<Position>>();
     
 }
