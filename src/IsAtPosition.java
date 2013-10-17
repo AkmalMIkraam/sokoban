@@ -26,5 +26,5 @@ public class IsAtPosition implements SearchTest {
         return (!state.isWall(position.x, position.y) && !state.isBox(position.x, position.y));
     }
 
-    Position position = new Position();
+    private final Position position = new Position();
 }

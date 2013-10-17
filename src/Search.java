@@ -109,110 +109,12 @@ public final class Search {
         return path;
     }
 
-    public static ArrayList<Position> findAll(State state, SearchTest test, int startX, int startY)
-    {
-        /* Create stack to store nodes */
-        Stack<Position> nodes = new Stack<Position>();
-        /* Create integers that is needed */
-        int width = state.getWidth();
-        int height = state.getHeight();
-        /* Create 2D array to store visited positions */
-        Direction visitedPositions[][] = new Direction[width][height];
-        /* Declare an positionobject to pop to from stack */
-        Position currentPosition = new Position(startX, startY);
-        int x = currentPosition.x, y = currentPosition.y;
-
-        /* Push the start position node, for the search on the stack */
-        nodes.push(currentPosition);
-
-        ArrayList<Position> result = new ArrayList<Position>();
-        /* Search for a path to the wanted goal */
-        while (!nodes.empty()){
-            currentPosition = nodes.pop();
-            x = currentPosition.x;
-            y = currentPosition.y;
-            if (test.isEnd(state, x, y))
-            {
-                result.add(new Position(x, y));
-            }
-
-            /* Create child nodes */
-            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
-            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
-            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
-            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
-        }
-
-        return result;
-    }
-
     private static void testAddPosition(State state, SearchTest test, Collection<Position> nodes, Direction[][] visitedPositions, int x, int y, Direction move)
     {
         if (visitedPositions[x][y] == null && (state.isFree(x, y) || test.isEnd(state, x, y))){
             Position possibleStep = new Position(x, y);
             visitedPositions[x][y] = move;
             nodes.add(possibleStep);
-        }
-    }
-
-
-    public static ArrayList<Position> findAllReachableGoals(State state, int boxIndex)
-    {
-        /* Create stack to store no        des */
-        Queue<State> nodes = new LinkedList<State>();
-        /* Create integers that is needed */
-        int width = state.getWidth();
-        int height = state.getHeight();
-        /* Create 2D array to store visited positions */
-        Direction visitedPositions[][] = new Direction[width][height];
-        /* Declare an positionobject to pop to from stack */
-        State currentState = state;
-        ArrayList<Position> result = new ArrayList<Position>();
-
-        /* Push the start position node, for the search on the stack */
-        nodes.add(currentState);
-
-        /* Search for a path to the wanted goal */
-        while (!nodes.isEmpty()){
-            currentState = nodes.remove();
-            Position boxPosition = currentState.boxes.get(boxIndex);
-            int x = boxPosition.x;
-            int y = boxPosition.y;
-
-            if (Solver.isGoal.isEnd(state, x, y)){
-                result.add(new Position(x, y));
-            }
-
-            /* Create child nodes */
-            testBoxAddPosition(currentState, nodes, visitedPositions, 0, -1, Direction.UP, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, 0, 1, Direction.DOWN, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, -1, 0, Direction.LEFT, boxIndex);
-            testBoxAddPosition(currentState, nodes, visitedPositions, 1, 0, Direction.RIGHT, boxIndex);
-        }
-        return result;
-    }
-
-
-    private static void testBoxAddPosition(State state, Queue<State> nodes, Direction[][] visitedPositions, int dirX, int dirY, Direction move, int index)
-    {
-        Position currentBoxPos =  state.boxes.get(index);
-        int boxX = currentBoxPos.x + dirX;
-        int boxY = currentBoxPos.y + dirY;
-        Position player = state.getPlayer();
-        if (visitedPositions[boxX][boxY] == null && state.isFree(boxX, boxY))
-        {
-            //Check that the player can actually move into position to push the box
-            Result result = Search.bfs(state, new IsAtPosition(move, currentBoxPos.x - dirX, currentBoxPos.y - dirY), player.x, player.y);
-            if (result != null)
-            {
-                ArrayList<Position> boxes = new ArrayList<Position>(state.boxes);
-                boxes.set(index, new Position(boxX, boxY));
-                State possibleStep = new State(state.map, new Position(currentBoxPos.x, currentBoxPos.y), boxes, result.path, state);
-                Collections.reverse(possibleStep.playerPath);
-                possibleStep.playerPath.add(move);
-                visitedPositions[boxX][boxY] = move;
-                nodes.add(possibleStep);
-            }
         }
     }
 

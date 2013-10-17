@@ -195,10 +195,10 @@ public class State implements Comparable<State>{
                 // See if there is a box with these exact coordinates
                 boxBool = false;
                 playerBool = false;
-                for (int b = 0; b < boxes.size(); b++) {
-                    if (boxes.get(b).x == j & boxes.get(b).y == i) {
+                for (Position box : boxes) {
+                    if (box.x == j & box.y == i) {
                         boxBool = true;
-                    } 
+                    }
                 }
                 // See if there is a player with these exact coordinates
                 if (player.x == j & player.y == i) {
@@ -250,12 +250,11 @@ public class State implements Comparable<State>{
     }
     
     private int manhattanDistance(State s){
-        int distance = 0;
         int totalDistance = 0;
         for(Position box : s.boxes){
             int min = 10000;
             for(Position goal : s.goals){
-                distance = Math.abs(goal.x-box.x) + Math.abs(goal.y-box.y);
+                int distance = Math.abs(goal.x-box.x) + Math.abs(goal.y-box.y);
                 if (distance < min){
                     min = distance;
                 }
