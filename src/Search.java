@@ -19,7 +19,7 @@ public final class Search {
         int width = state.getWidth();
         int height = state.getHeight();
         /* Create 2D array to store visited positions */
-        Direction visitedPositions[][] = new Direction[width][height];
+        VisitedNodes visitedPositions = VisitedNodes.createArray(width, height);
         /* Declare an positionobject to pop to from stack */
         Position currentPosition = new Position(startX, startY);
 
@@ -34,7 +34,7 @@ public final class Search {
 
             if (test.isEnd(state, currentPosition.x, currentPosition.y)){
                 Result result = new Result();
-                result.path = getPath(visitedPositions, currentPosition.x, currentPosition.y, startX, startY);
+                result.path = getPath(visitedPositions.directions, currentPosition.x, currentPosition.y, startX, startY);
                 result.endPosition = new Position(currentPosition.x, currentPosition.y);
                 return result;
             }
@@ -48,43 +48,86 @@ public final class Search {
         return null;
     }
 
+    private static class VisitedNodes
+    {
+        public VisitedNodes(int width, int height)
+        {
+            directions = new Direction[width][height];
+            tokens = new int[width][height];
+        }
+
+        public Direction get(int x, int y)
+        {
+            if (tokens[x][y] != currentToken)
+            {
+                return null;
+            }
+            return directions[x][y];
+        }
+
+        public void set(int x, int y, Direction dir)
+        {
+            tokens[x][y] = currentToken;
+            directions[x][y] = dir;
+        }
+
+        static VisitedNodes createArray(int width, int height)
+        {
+            if (visitedNodes == null)
+            {
+                visitedNodes = new VisitedNodes(width, height);
+            }
+            visitedNodes.currentToken++;
+            return visitedNodes;
+        }
+        private static VisitedNodes visitedNodes;
+
+        public Direction[][] directions;
+        private int tokens[][];
+        private int currentToken;
+    }
     public static Result bfs(State state, SearchTest test, int startX, int startY)
     {
         if (test.isFree(state)){
-        /* Create stack to store nodes */
-        Queue<Position> nodes = new LinkedList<Position>();
-        /* Create integers that is needed */
-        int width = state.getWidth();
-        int height = state.getHeight();
-        /* Create 2D array to store visited positions */
-        Direction visitedPositions[][] = new Direction[width][height];
-        /* Declare an positionobject to pop to from stack */
-        Position currentPosition = new Position(startX, startY);
+            /* Create stack to store nodes */
+            Queue<Position> nodes = new LinkedList<Position>();
+            /* Create integers that is needed */
+            int width = state.getWidth();
+            int height = state.getHeight();
+            /* Create 2D array to store visited positions */
+            VisitedNodes visitedPositions = VisitedNodes.createArray(width, height);
+            /* Declare an positionobject to pop to from stack */
+            Position currentPosition = new Position(startX, startY);
 
-        /* Push the start position node, for the search on the stack */
-        nodes.add(currentPosition);
+            /* Push the start position node, for the search on the stack */
+            nodes.add(currentPosition);
 
-        /* Search for a path to the wanted goal */
-        while (!nodes.isEmpty()){
-            currentPosition = nodes.remove();
-            int x = currentPosition.x;
-            int y = currentPosition.y;
+            /* Search for a path to the wanted goal */
+            while (!nodes.isEmpty()){
+                currentPosition = nodes.remove();
+                int x = currentPosition.x;
+                int y = currentPosition.y;
 
-            if (test.isEnd(state, currentPosition.x, currentPosition.y)){
-                Result result = new Result();
-                result.path = getPath(visitedPositions, currentPosition.x, currentPosition.y, startX, startY);
-                result.endPosition = new Position(currentPosition.x, currentPosition.y);
-                return result;
+                if (test.isEnd(state, currentPosition.x, currentPosition.y)){
+                    return createResult(visitedPositions, currentPosition, startX, startY);
+                }
+
+                /* Create child nodes */
+                testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
+                testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
+                testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
+                testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
             }
-
-            /* Create child nodes */
-            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
-            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
-            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
-            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
-        }
         }
         return null;
+    }
+
+    static Result createResult(VisitedNodes visited, Position currentPosition, int startX, int startY)
+    {
+        Result result = new Result();
+        result.path = getPath(visited.directions, currentPosition.x, currentPosition.y, startX, startY);
+        result.endPosition = new Position(currentPosition.x, currentPosition.y);
+        return result;
     }
 
     private static ArrayList<Direction> getPath(Direction[][] moves, int fromX, int fromY, int toX, int toY)
@@ -109,11 +152,11 @@ public final class Search {
         return path;
     }
 
-    private static void testAddPosition(State state, SearchTest test, Collection<Position> nodes, Direction[][] visitedPositions, int x, int y, Direction move)
+    private static void testAddPosition(State state, SearchTest test, Collection<Position> nodes, VisitedNodes visited, int x, int y, Direction move)
     {
-        if (visitedPositions[x][y] == null && (state.isFree(x, y) || test.isEnd(state, x, y))){
+        if (visited.get(x, y) == null && (state.isFree(x, y) || test.isEnd(state, x, y))){
             Position possibleStep = new Position(x, y);
-            visitedPositions[x][y] = move;
+            visited.set(x, y, move);
             nodes.add(possibleStep);
         }
     }
