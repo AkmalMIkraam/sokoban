@@ -255,13 +255,10 @@ public final class State implements Comparable<State>{
             manhattanDistance += min;
         }
     }
-    
-    /*private static boolean isInTunnel(Position box){
-        return ((this.isWall(box.x+1,box.y) && this.isWall(box.x-1,box.y)) | (this.isWall(box.x,box.y+1) && this.isWall(box.x,box.y-1)));
-    }*/
 
     /**
-     * We don't necessarily have to store objects like this but it would work as a start.
+     * Store boxes and goals in simple list to save memory and allow iteration
+     * This will give slightly more expensive isBox/isGoal lookup but the actual runtime of those methods are small anyway
      */
     public ArrayList<Position> boxes;
     public ArrayList<Position> goals;
