@@ -50,7 +50,6 @@ public final class Search {
 
     public static Result bfs(State state, SearchTest test, int startX, int startY)
     {
-        if (test.isFree(state)){
             /* Create stack to store nodes */
             ArrayDeque<Position> nodes = new ArrayDeque<Position>();
             /* Create integers that is needed */
@@ -80,7 +79,7 @@ public final class Search {
                 testAddPosition(state, test, nodes, visitedPositions, x - 1, y, Direction.LEFT);
                 testAddPosition(state, test, nodes, visitedPositions, x + 1, y, Direction.RIGHT);
             }
-        }
+
         return null;
     }
 
@@ -118,7 +117,7 @@ public final class Search {
         }
     }
 
-    public static State findBoxPath(State state, SearchTest test, int playerStartX, int playerStartY)
+    public static State findBoxPath(State state, int playerStartX, int playerStartY)
     {
         /* Create stack to store nodes */
         PriorityQueue<State> nodes = new PriorityQueue<State>();
@@ -133,7 +132,7 @@ public final class Search {
         while (!nodes.isEmpty()){
             currentState = nodes.remove();
 
-            if (test.isEnd(currentState, 0, 0)){
+            if (currentState.isFinal()){
                 return currentState;
             }
 

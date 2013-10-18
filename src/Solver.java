@@ -3,9 +3,6 @@ import java.util.Collections;
 
 public class Solver {
 
-    static IsBox isBox = new IsBox();
-    static IsGoal isGoal = new IsGoal();
-
     public static Iterable<Direction> solve(State state)
     {
         State boxToGoal;
@@ -15,7 +12,7 @@ public class Solver {
 
         for (Position player : possiblePlayerPositions)
         {
-            boxToGoal = Search.findBoxPath(state, isGoal, player.x, player.y);
+            boxToGoal = Search.findBoxPath(state, player.x, player.y);
             if (boxToGoal != null){
                 Search.Result result = Search.bfs(boxToGoal, new IsAtPosition(px, py), boxToGoal.player.x, boxToGoal.player.y);
                 if(result != null){

@@ -36,7 +36,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, Exception {
         //System.in.read();
-        ArrayList<String> board = loadBoard("maps/all.slc00154.in");
+        ArrayList<String> board = loadBoard("maps/all.slc00157.in");
 
         Map map = new Map(board);
         Map invertMap = Map.inverted(map);
