@@ -11,7 +11,7 @@ public final class Search {
         public ArrayList<Direction> path;
     }
 
-    public static void floodfill(State state, byte[][] map, int startX, int startY, byte token)
+    public static void floodfill(State state, boolean[][] map, int startX, int startY, boolean token)
     {
         /* Create stack to store nodes */
         Stack<Position> nodes = new Stack<Position>();
@@ -213,26 +213,25 @@ public final class Search {
         int x = p.x;
         int y = p.y;
 
-        byte[][] maybePlayerPositions =  history.get(state.boxes);
+        boolean[][] maybePlayerPositions =  history.get(state.boxes);
         if (maybePlayerPositions == null)
         {
-            maybePlayerPositions = new byte[state.getWidth()][state.getHeight()];
+            maybePlayerPositions = new boolean[state.getWidth()][state.getHeight()];
         }
         else
         {
-            if (maybePlayerPositions[x][y] != 0)
+            if (maybePlayerPositions[x][y])
             {
                 return true;
             }
         }
-        maybePlayerPositions[0][0] += 1;
-        floodfill(state, maybePlayerPositions, x, y, maybePlayerPositions[0][0]);
+        floodfill(state, maybePlayerPositions, x, y, true);
         history.put(state.boxes, maybePlayerPositions);
         return false;
     }
 
     //Map which stores all player positions which has been observed for a specific box configuration
     //The boxes are sorted first on the x-axis and then on they y-axis with a stable sort so that it can be used as a key
-    private static HashMap<ArrayList<Position>, byte[][]> history = new HashMap<ArrayList<Position>, byte[][]>();
+    private static HashMap<ArrayList<Position>, boolean[][]> history = new HashMap<ArrayList<Position>, boolean[][]>();
     
 }
