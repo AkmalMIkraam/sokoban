@@ -104,11 +104,8 @@ public final class State implements Comparable<State>{
     private int boxesOnGoal(){
         int numOfBoxOnGoal = 0;
         for (Position boxPos : boxes){
-            for(Position goalPos : goals){
-                //System.err.println(goalPos + " " + boxPos);
-                if(boxPos.equals(goalPos)){
-                    numOfBoxOnGoal++;
-                }
+            if(map.isGoal(boxPos.x, boxPos.y)){
+                numOfBoxOnGoal++;
             }
         }
         return numOfBoxOnGoal;
@@ -166,12 +163,7 @@ public final class State implements Comparable<State>{
 
     public boolean isGoal(int x, int y)
     {
-        for (Position pos : goals)
-        {
-            if (x == pos.x & y == pos.y)
-                return true;
-        }
-        return false;
+        return map.isGoal(x, y);
     }
 
     public boolean isWall(int x, int y)
