@@ -11,7 +11,7 @@ public final class State implements Comparable<State>{
         this.parent = parent;
         this.goals = parent.goals;
         this.playerEndPos = parent.playerEndPos;
-        cacheManhattanDistance();
+        cacheHeuristic();
     }
 
     public State(Map map, ArrayList<String> boardinv, ArrayList<String> board) throws Exception
@@ -24,7 +24,7 @@ public final class State implements Comparable<State>{
         this.playerEndPos = findPlayerEndPos();
         this.boxes = findBoxes(boardinv);
         this.goals = findGoals(boardinv);
-        cacheManhattanDistance();
+        cacheHeuristic();
     }
 
     private Position findPlayer(ArrayList<String> board) throws Exception
@@ -218,32 +218,20 @@ public final class State implements Comparable<State>{
     }
     
     public int compareTo(State s){
-        
-        int compare1;
-        int compare2;
-        int boxesOnGoal1 = this.boxesOnGoal();
-        
-        if(boxesOnGoal1 > 0.8 * boxes.size()){
-            compare2 = boxesOnGoal1;
-            compare1 = s.boxesOnGoal();
-        } else {
-            compare1 = this.manhattanDistance;
-            compare2 = s.manhattanDistance;
-        }
-        
-        if(compare1 < compare2){
+
+        if(s.heuristic < this.heuristic){
             return -1;
         }
-        else if(compare2 < compare1){
+        else if(this.heuristic < s.heuristic){
             return 1;
         } else {
             return 0;
         }
     }
 
-    private int manhattanDistance;
-    private void cacheManhattanDistance(){
-
+    private int heuristic;
+    private void cacheHeuristic(){
+        //Calculate manhattan distance between boxes and the closes goal
         for(Position box : boxes){
             int min = 10000;
             for(Position goal : goals){
@@ -252,7 +240,13 @@ public final class State implements Comparable<State>{
                     min = distance;
                 }
             }
-            manhattanDistance += min;
+            //If the box is on the goal the give a bonus to prefer states with many boxes on goals
+            if (min == 0)
+            {
+                heuristic += 10;
+            }
+            else
+                heuristic -= min;
         }
     }
 
