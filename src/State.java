@@ -76,19 +76,19 @@ public final class State implements Comparable<State>{
         Search.Result result;
         ArrayList<Position> positions = new ArrayList<Position>();
         for(Position box : this.boxes){
-            result = Search.dfs(this, new IsAtPosition(box.x+1,box.y), this.player.x, this.player.y);
+            result = Search.bfs(this, new IsAtPosition(box.x+1,box.y), this.player.x, this.player.y);
             if(result != null){
                 positions.add(new Position(box.x+1,box.y));
             }
-            result = Search.dfs(this, new IsAtPosition(box.x-1,box.y), this.player.x, this.player.y);
+            result = Search.bfs(this, new IsAtPosition(box.x-1,box.y), this.player.x, this.player.y);
             if(result != null){
                 positions.add(new Position(box.x-1,box.y));
             }
-            result = Search.dfs(this, new IsAtPosition(box.x,box.y+1), this.player.x, this.player.y);
+            result = Search.bfs(this, new IsAtPosition(box.x,box.y+1), this.player.x, this.player.y);
             if(result != null){
                 positions.add(new Position(box.x,box.y+1));
             }
-            result = Search.dfs(this, new IsAtPosition(box.x,box.y-1), this.player.x, this.player.y);
+            result = Search.bfs(this, new IsAtPosition(box.x,box.y-1), this.player.x, this.player.y);
             if(result != null){
                 positions.add(new Position(box.x,box.y-1));
             }

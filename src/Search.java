@@ -11,15 +11,10 @@ public final class Search {
         public ArrayList<Direction> path;
     }
 
-    public static Result dfs(State state, SearchTest test, int startX, int startY)
+    public static void floodfill(State state, byte[][] map, int startX, int startY, byte token)
     {
         /* Create stack to store nodes */
         Stack<Position> nodes = new Stack<Position>();
-        /* Create integers that is needed */
-        int width = state.getWidth();
-        int height = state.getHeight();
-        /* Create 2D array to store visited positions */
-        VisitedNodes visitedPositions = VisitedNodes.createArray(width, height);
         /* Declare an positionobject to pop to from stack */
         Position currentPosition = new Position(startX, startY);
 
@@ -31,21 +26,26 @@ public final class Search {
             currentPosition = nodes.pop();
             int x = currentPosition.x;
             int y = currentPosition.y;
-
-            if (test.isEnd(state, currentPosition.x, currentPosition.y)){
-                Result result = new Result();
-                result.path = getPath(visitedPositions.directions, currentPosition.x, currentPosition.y, startX, startY);
-                result.endPosition = new Position(currentPosition.x, currentPosition.y);
-                return result;
-            }
+            map[x][y] = token;
 
             /* Create child nodes */
-            testAddPosition(state, test, nodes, visitedPositions, x, y-1, Direction.UP);
-            testAddPosition(state, test, nodes, visitedPositions, x, y+1, Direction.DOWN);
-            testAddPosition(state, test, nodes, visitedPositions, x-1, y, Direction.LEFT);
-            testAddPosition(state, test, nodes, visitedPositions, x+1, y, Direction.RIGHT);
+            if (map[x+1][y] != token && state.isFree(x+1, y))
+            {
+                nodes.add(new Position(x+1, y));
+            }
+            if (map[x-1][y] != token && state.isFree(x-1, y))
+            {
+                nodes.add(new Position(x-1, y));
+            }
+            if (map[x][y+1] != token && state.isFree(x, y+1))
+            {
+                nodes.add(new Position(x, y+1));
+            }
+            if (map[x][y-1] != token && state.isFree(x, y-1))
+            {
+                nodes.add(new Position(x, y-1));
+            }
         }
-        return null;
     }
 
     public static Result bfs(State state, SearchTest test, int startX, int startY)
@@ -213,25 +213,26 @@ public final class Search {
         int x = p.x;
         int y = p.y;
 
-        ArrayList<Position> maybePlayerPositions =  history.get(state.boxes);
-        if (maybePlayerPositions != null)
+        byte[][] maybePlayerPositions =  history.get(state.boxes);
+        if (maybePlayerPositions == null)
         {
-            for(Position otherPlayer : maybePlayerPositions){
-                Result same = Search.bfs(state, new IsAtPosition(otherPlayer.x, otherPlayer.y), x, y);
-                if (same != null)
-                    return true;
-            }
-            maybePlayerPositions.add(state.getPlayer());
-            return false;
+            maybePlayerPositions = new byte[state.getWidth()][state.getHeight()];
         }
-        ArrayList<Position> s = new ArrayList<Position>();
-        s.add(state.getPlayer());
-        history.put(state.boxes, s);
+        else
+        {
+            if (maybePlayerPositions[x][y] != 0)
+            {
+                return true;
+            }
+        }
+        maybePlayerPositions[0][0] += 1;
+        floodfill(state, maybePlayerPositions, x, y, maybePlayerPositions[0][0]);
+        history.put(state.boxes, maybePlayerPositions);
         return false;
     }
 
     //Map which stores all player positions which has been observed for a specific box configuration
     //The boxes are sorted first on the x-axis and then on they y-axis with a stable sort so that it can be used as a key
-    private static HashMap<ArrayList<Position>, ArrayList<Position>> history = new HashMap<ArrayList<Position>, ArrayList<Position>>();
+    private static HashMap<ArrayList<Position>, byte[][]> history = new HashMap<ArrayList<Position>, byte[][]>();
     
 }
