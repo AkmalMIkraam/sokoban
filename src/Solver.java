@@ -24,15 +24,23 @@ public class Solver {
                     toReturn.addAll(result.path);
                     Collections.reverse(toReturn);
                     return toReturn;
-                } else {
-                    System.err.println("No path back");
                 }
-            } else{
-                System.err.println("No solution" + state.playerEndPos);
+                else
+                {
+                    if (Main.DEBUG)
+                    {
+                        System.err.println("No path back");
+                    }
+                }
+            }
+            else
+            {
+                if (Main.DEBUG)
+                {
+                    System.err.println("No solution" + state.playerEndPos);
+                }
             }
         }
-        System.err.println("no path");
-        System.exit(0);
         return null;
     }
 

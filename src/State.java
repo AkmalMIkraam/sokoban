@@ -114,7 +114,6 @@ public final class State implements Comparable<State>{
     private boolean isAtPossibleEndPosition(){
         for (Position pos : playerEndPos)
         {
-            //System.err.println("Boxes: " + pos);
             if (player.x == pos.x & player.y == pos.y)
                 return true;
         }
@@ -227,7 +226,6 @@ public final class State implements Comparable<State>{
         if(boxesOnGoal1 > 0.8 * boxes.size()){
             compare2 = boxesOnGoal1;
             compare1 = s.boxesOnGoal();
-            //System.err.println("Changed");
         } else {
             compare1 = this.manhattanDistance;
             compare2 = s.manhattanDistance;

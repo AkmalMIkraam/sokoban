@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Main {
 
+    public static final boolean DEBUG = false;
+
     public static ArrayList<String> loadBoard(String filename) throws IOException
     {
         ArrayList<String> board = new ArrayList<String>();
@@ -33,12 +35,15 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) throws IOException, Exception {
-
-        ArrayList<String> board = loadBoard("maps/all.slc00100.in");
+        //System.in.read();
+        ArrayList<String> board = loadBoard("maps/all.slc00154.in");
 
         Map map = new Map(board);
         Map invertMap = Map.inverted(map);
-        System.err.println(map.toString());
+        if (DEBUG)
+        {
+            System.err.println(map.toString());
+        }
         State initialState = new State(invertMap, map.inverseMap, board);
 
         Iterable<Direction> moves = Solver.solve(initialState);

@@ -155,19 +155,19 @@ public final class Search {
         return null;
     }
 
-    private static final Comparator<Position> compareX = new Comparator<Position>() {
+    private static final Comparator<Position> comparePoints = new Comparator<Position>() {
         @Override
         public int compare(Position o1, Position o2) {
-            return o1.x < o2.x ? -1 : 1;
+            if (o1.x == o2.x)
+            {
+                return o1.y - o2.y;
+            }
+            else
+            {
+                return o1.x - o2.x;
+            }
         }
     };
-    private static final Comparator<Position> compareY = new Comparator<Position>() {
-        @Override
-        public int compare(Position o1, Position o2) {
-            return o1.y < o2.y ? -1 : 1;
-        }
-    };
-
     private static void testBoxAddPosition(State state, Queue<State> nodes, Position player, int boxX, int boxY, int boxX2, int boxY2, Direction move, int index)
     {
         if (state.isFree(boxX, boxY) && state.isFree(boxX2, boxY2))
@@ -180,8 +180,7 @@ public final class Search {
                 boxes.set(index, new Position(boxX, boxY));
                 // Sort the boxes with a stable sort since we want that two configurations of boxes which are permutations
                 // of each other are equal
-                Collections.sort(boxes, compareX);
-                Collections.sort(boxes, compareY);
+                Collections.sort(boxes, comparePoints);
                 State possibleStep = new State(state.map, new Position(boxX2, boxY2), boxes, result.path, state);
                 Collections.reverse(possibleStep.playerPath);
                 possibleStep.playerPath.add(move);
